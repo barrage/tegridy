@@ -22,8 +22,8 @@ import javax.tools.Diagnostic;
 import net.barrage.tegridy.validation.annotation.compare.Compare;
 import net.barrage.tegridy.validation.annotation.compare.CompareList;
 
-@SupportedAnnotationTypes({ "net.barrage.tegridy.validation.annotations.compare.Compare",
-    "net.barrage.tegridy.validation.annotations.compare.CompareList" })
+@SupportedAnnotationTypes({ "net.barrage.tegridy.validation.annotation.compare.Compare",
+    "net.barrage.tegridy.validation.annotation.compare.CompareList" })
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class CompareProcessor extends AbstractProcessor {
@@ -52,8 +52,7 @@ public class CompareProcessor extends AbstractProcessor {
         !elementHasField(annotatedElement, comparisonField)) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
           String.format("The class '%s' is missing required fields by @Compare: '%s', '%s'.",
-              annotatedElement.getSimpleName(), baseField, comparisonField),
-          annotatedElement);
+              annotatedElement.getSimpleName(), baseField, comparisonField), annotatedElement);
       return;
     }
 
@@ -61,37 +60,33 @@ public class CompareProcessor extends AbstractProcessor {
     TypeMirror comparisonFieldType =
         getFieldAsType(annotatedElement, comparisonField, elementUtils);
 
-    annotatedElement.getEnclosedElements().stream()
-        .filter(enclosed -> enclosed.getKind() == ElementKind.METHOD &&
-            enclosed.getSimpleName().toString().equals(comparisonMethod))
-        .map(ExecutableElement.class::cast)
-        .findFirst()
-        .ifPresentOrElse(
+    annotatedElement.getEnclosedElements().stream().filter(
+            enclosed -> enclosed.getKind() == ElementKind.METHOD &&
+                enclosed.getSimpleName().toString().equals(comparisonMethod))
+        .map(ExecutableElement.class::cast).findFirst().ifPresentOrElse(
             method -> validateMethod(method, baseFieldType, comparisonFieldType, typeUtils,
-                elementUtils, annotatedElement, comparisonMethod),
-            () -> processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-                String.format("Method '%s' required by @Compare not found in class '%s'.",
-                    comparisonMethod, annotatedElement.getSimpleName()), annotatedElement));
+                elementUtils, annotatedElement, comparisonMethod), () -> processingEnv.getMessager()
+                .printMessage(Diagnostic.Kind.ERROR,
+                    String.format("Method '%s' required by @Compare not found in class '%s'.",
+                        comparisonMethod, annotatedElement.getSimpleName()), annotatedElement));
   }
 
   private boolean elementHasField(Element element, String fieldName) {
-    return element.getEnclosedElements().stream()
-        .anyMatch(enclosed -> enclosed.getKind() == ElementKind.FIELD &&
+    return element.getEnclosedElements().stream().anyMatch(
+        enclosed -> enclosed.getKind() == ElementKind.FIELD &&
             enclosed.getSimpleName().toString().equals(fieldName));
   }
 
   private TypeMirror getFieldAsType(Element element, String fieldName, Elements elementUtils) {
-    return element.getEnclosedElements().stream()
-        .filter(enclosed -> enclosed.getKind() == ElementKind.FIELD &&
-            enclosed.getSimpleName().toString().equals(fieldName))
-        .findFirst()
-        .map(Element::asType)
+    return element.getEnclosedElements().stream().filter(
+            enclosed -> enclosed.getKind() == ElementKind.FIELD &&
+                enclosed.getSimpleName().toString().equals(fieldName)).findFirst().map(Element::asType)
         .orElse(elementUtils.getTypeElement(Object.class.getCanonicalName()).asType());
   }
 
   private void validateMethod(ExecutableElement method, TypeMirror baseFieldType,
-                              TypeMirror comparisonFieldType,
-                              Types typeUtils, Elements elementUtils, Element annotatedElement,
+                              TypeMirror comparisonFieldType, Types typeUtils,
+                              Elements elementUtils, Element annotatedElement,
                               String comparisonMethod) {
     TypeMirror returnType = method.getReturnType();
     boolean isBooleanType = returnType.getKind() == TypeKind.BOOLEAN ||
@@ -109,11 +104,10 @@ public class CompareProcessor extends AbstractProcessor {
     if (parameters.size() != 2 ||
         !typeUtils.isSameType(parameters.get(0).asType(), baseFieldType) ||
         !typeUtils.isSameType(parameters.get(1).asType(), comparisonFieldType)) {
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-          String.format(
+      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, String.format(
               "Method '%s' in class '%s' must have exactly 2 parameters matching types of '%s' and '%s' as required by @Compare.",
-              comparisonMethod, annotatedElement.getSimpleName(), baseFieldType,
-              comparisonFieldType), annotatedElement);
+              comparisonMethod, annotatedElement.getSimpleName(), baseFieldType, comparisonFieldType),
+          annotatedElement);
     }
   }
 }

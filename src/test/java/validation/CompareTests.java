@@ -12,7 +12,6 @@ import jakarta.validation.ValidatorFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.stream.Collectors;
 import net.barrage.tegridy.validation.annotation.compare.Compare;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -55,10 +54,10 @@ public class CompareTests {
     assertEquals(2, violations.size(), "Validation should fail for invalid comparison");
 
     String expectedMessage = "Field1 must be greater than Field2";
-    assertTrue(violations.stream().map(item -> item.getMessage()).collect(Collectors.toList())
+    assertTrue(violations.stream().map(ConstraintViolation::getMessage).toList()
         .contains(expectedMessage));
     expectedMessage = "Field3 must be greater than Field4";
-    assertTrue(violations.stream().map(item -> item.getMessage()).collect(Collectors.toList())
+    assertTrue(violations.stream().map(ConstraintViolation::getMessage).toList()
         .contains(expectedMessage));
   }
 

@@ -26,4 +26,22 @@ public class StringUtils {
 
     return parts[0].toLowerCase() + camelCaseString;
   }
+
+  /**
+   * Attempts to convert a camel case string to a variant of the given enum. The enum variants
+   * must be in SCREAM_CASE.
+   *
+   * @param camelCaseString The string to convert. Must be in camel case.
+   * @param e               The enum class that holds the desired variant.
+   * @param <T>             The enum type.
+   * @return A variant of the given enum class.
+   * @throws IllegalArgumentException If the string cannot be transformed to any of the enum's variants.
+   * @throws NullPointerException     If any of the inputs are `null`.
+   */
+  public static <T extends Enum<T>> T camelToVariant(String camelCaseString, Class<T> e)
+      throws IllegalArgumentException, NullPointerException {
+    String[] words = camelCaseString.split("(?=[A-Z])");
+    String underscoredString = String.join("_", words).toUpperCase();
+    return Enum.valueOf(e, underscoredString);
+  }
 }

@@ -1,6 +1,5 @@
 package net.barrage.tegridy.http.queryParams;
 
-import java.util.Arrays;
 import java.util.Collection;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -64,9 +63,7 @@ public interface QueryParams {
 
         map.add(queryKey, value.toString());
       } catch (IllegalAccessException e) {
-        System.err.println(
-            "Error occurred in `toQueryParams`:" + Arrays.toString(e.getStackTrace()));
-        return null;
+        throw new RuntimeException(e);
       }
     }
 
