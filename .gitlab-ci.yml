@@ -1,0 +1,20 @@
+include:
+  - project: barrage/gitlab-ci-templates
+    ref: master
+    file: GitlabFlow/Deploy-custom.yml
+
+Test:
+  stage: test
+  image: nexus.barrage.net:13455/barrage-internal/ubuntu-java-17
+  tags:
+    - docker-executor
+  script:
+    - ./gradlew build
+    - ./gradlew test
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  rules:
+    - if: $CI_COMMIT_REF_PROTECTED != "true"
+      allow_failure: true
+      when: on_success
+    - allow_failure: false
+      when: on_success
