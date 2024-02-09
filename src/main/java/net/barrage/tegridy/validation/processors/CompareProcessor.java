@@ -19,8 +19,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
-import net.barrage.tegridy.validation.annotations.compare.Compare;
-import net.barrage.tegridy.validation.annotations.compare.CompareList;
+import net.barrage.tegridy.validation.annotation.compare.Compare;
+import net.barrage.tegridy.validation.annotation.compare.CompareList;
 
 @SupportedAnnotationTypes({ "net.barrage.tegridy.validation.annotations.compare.Compare",
     "net.barrage.tegridy.validation.annotations.compare.CompareList" })

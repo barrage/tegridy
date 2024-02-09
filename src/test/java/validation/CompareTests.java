@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
-import net.barrage.tegridy.validation.annotations.compare.Compare;
+import net.barrage.tegridy.validation.annotation.compare.Compare;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +52,7 @@ public class CompareTests {
   public void testInvalidComparisonAllFailed() {
     TestClass testObj = new TestClass(2, 3, 2, 3);
     Set<ConstraintViolation<TestClass>> violations = validator.validate(testObj);
-    assertTrue(violations.size() == 2, "Validation should fail for invalid comparison");
+    assertEquals(2, violations.size(), "Validation should fail for invalid comparison");
 
     String expectedMessage = "Field1 must be greater than Field2";
     assertTrue(violations.stream().map(item -> item.getMessage()).collect(Collectors.toList())

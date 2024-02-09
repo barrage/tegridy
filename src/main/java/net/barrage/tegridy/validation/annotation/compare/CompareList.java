@@ -1,4 +1,4 @@
-package net.barrage.tegridy.validation.annotations.compare;
+package net.barrage.tegridy.validation.annotation.compare;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.TYPE;
@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE, ANNOTATION_TYPE })
 @Documented
-public @interface CompareList{
+public @interface CompareList {
   Compare[] value();
 }

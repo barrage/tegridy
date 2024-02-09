@@ -1,4 +1,4 @@
-package net.barrage.tegridy.validation.annotations.compare;
+package net.barrage.tegridy.validation.annotation.compare;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

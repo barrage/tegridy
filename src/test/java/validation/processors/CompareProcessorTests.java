@@ -48,7 +48,8 @@ public class CompareProcessorTests {
         .compile(source);
 
     assertThat(compilation.errors().toString(),
-        containsString("The class 'MissingComparisonField' is missing required fields by @Compare:"));
+        containsString(
+            "The class 'MissingComparisonField' is missing required fields by @Compare:"));
   }
 
   @Test
