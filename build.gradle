@@ -1,17 +1,47 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
-group = 'net.barrage'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url = uri("${System.getProperty('user.home')}/.m2/repository")
+        }
+    }
+}
+
+group = 'net.barrage.tegridy'
 version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.0-M1'
+    implementation 'org.glassfish.expressly:expressly:5.0.0'
+    implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+    implementation group: 'com.google.auto.service', name: 'auto-service', version: '1.1.1'
+    annotationProcessor group: 'com.google.auto.service', name: 'auto-service', version: '1.1.1'
+    testImplementation 'com.google.testing.compile:compile-testing:0.21.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
 test {
