@@ -1,4 +1,4 @@
-package validation.processors;
+package validation.processor;
 
 import static com.google.testing.compile.Compiler.javac;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -8,17 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
 import javax.tools.JavaFileObject;
-import net.barrage.tegridy.validation.processor.RequiresNotNullProcessor;
+import net.barrage.tegridy.validation.processor.RequiresNullProcessor;
 import org.junit.jupiter.api.Test;
 
-public class RequiresNotNullProcessorTests {
+public class RequiresNullProcessorTests {
 
   @Test
   public void testPass() {
-    JavaFileObject source = JavaFileObjects.forResource("processor/requiresNotNull/CorrectClass.java");
+    JavaFileObject source = JavaFileObjects.forResource("processor/requiresNull/CorrectClass.java");
 
     Compilation compilation = javac()
-        .withProcessors(new RequiresNotNullProcessor())
+        .withProcessors(new RequiresNullProcessor())
         .compile(source);
 
     assertTrue(compilation.errors().isEmpty(), "Expected no compilation errors");
@@ -26,25 +26,27 @@ public class RequiresNotNullProcessorTests {
 
   @Test
   public void testErrorMissingMainField() {
-    JavaFileObject source = JavaFileObjects.forResource("processor/requiresNotNull/MissingMainFieldClass.java");
+    JavaFileObject source =
+        JavaFileObjects.forResource("processor/requiresNull/MissingMainFieldClass.java");
 
     Compilation compilation = javac()
-        .withProcessors(new RequiresNotNullProcessor())
+        .withProcessors(new RequiresNullProcessor())
         .compile(source);
 
     assertThat(compilation.errors().toString(),
-        containsString("is missing required field by @RequiresNotNull: 'mainField'"));
+        containsString("is missing required field by @RequiresNull: 'mainField'"));
   }
 
   @Test
   public void testErrorMissingRequiredFields() {
-    JavaFileObject source = JavaFileObjects.forResource("processor/requiresNotNull/MissingRequiredFieldsClass.java");
+    JavaFileObject source =
+        JavaFileObjects.forResource("processor/requiresNull/MissingRequiredFieldsClass.java");
 
     Compilation compilation = javac()
-        .withProcessors(new RequiresNotNullProcessor())
+        .withProcessors(new RequiresNullProcessor())
         .compile(source);
 
     assertThat(compilation.errors().toString(),
-        containsString("is missing required field by @RequiresNotNull: 'missingRelatedField2'"));
+        containsString("is missing required field by @RequiresNull: 'missingRelatedField2'"));
   }
 }

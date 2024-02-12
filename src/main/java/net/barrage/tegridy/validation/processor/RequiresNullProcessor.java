@@ -13,43 +13,43 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import net.barrage.tegridy.validation.annotation.requiresNotNull.RequiresNotNull;
-import net.barrage.tegridy.validation.annotation.requiresNotNull.RequiresNotNullList;
+import net.barrage.tegridy.validation.annotation.requiresNull.RequiresNull;
+import net.barrage.tegridy.validation.annotation.requiresNull.RequiresNullList;
 
 @SupportedAnnotationTypes(
-    "net.barrage.tegridy.validation.annotation.requiresNotNull.*")
+    "net.barrage.tegridy.validation.annotation.requiresNull.*")
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
-public class RequiresNotNullProcessor extends AbstractProcessor {
+public class RequiresNullProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    roundEnv.getElementsAnnotatedWithAny(Set.of(RequiresNotNullList.class, RequiresNotNull.class))
+    roundEnv.getElementsAnnotatedWithAny(Set.of(RequiresNullList.class, RequiresNull.class))
         .forEach(annotatedElement -> {
-          RequiresNotNull[] requiresNotNulls =
-              annotatedElement.getAnnotationsByType(RequiresNotNull.class);
-          for (RequiresNotNull requiresNotNull : requiresNotNulls) {
-            validateFieldsAndMethod(annotatedElement, requiresNotNull);
+          RequiresNull[] requiresNulls =
+              annotatedElement.getAnnotationsByType(RequiresNull.class);
+          for (RequiresNull requiresNull : requiresNulls) {
+            validateFieldsAndMethod(annotatedElement, requiresNull);
           }
         });
     return true;
   }
 
-  private void validateFieldsAndMethod(Element annotatedElement, RequiresNotNull requiresNotNull) {
-    String field = requiresNotNull.field();
-    String[] requiresFields = requiresNotNull.requiresFields();
+  private void validateFieldsAndMethod(Element annotatedElement, RequiresNull requiresNull) {
+    String field = requiresNull.field();
+    String[] forbiddenFields = requiresNull.forbiddenFields();
 
     if (!elementHasField(annotatedElement, field)) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-          String.format("The class '%s' is missing required field by @RequiresNotNull: '%s'.",
+          String.format("The class '%s' is missing required field by @RequiresNull: '%s'.",
               annotatedElement.getSimpleName(), field), annotatedElement);
       return;
     }
 
-    for (String fieldName : requiresFields) {
+    for (String fieldName : forbiddenFields) {
       if (!elementHasField(annotatedElement, fieldName)) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-            String.format("The class '%s' is missing required field by @RequiresNotNull: '%s'.",
+            String.format("The class '%s' is missing required field by @RequiresNull: '%s'.",
                 annotatedElement.getSimpleName(), fieldName), annotatedElement);
         return;
       }

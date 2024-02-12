@@ -10,11 +10,11 @@ import jakarta.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import net.barrage.tegridy.validation.annotation.requiresNotNull.RequiresNotNull;
+import net.barrage.tegridy.validation.annotation.requiresNull.RequiresNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class RequiresNotNullTests {
+public class RequiresNullTests {
   private static Validator validator;
 
   @BeforeAll
@@ -24,136 +24,106 @@ public class RequiresNotNullTests {
   }
 
   @Test
-  void validAllFieldsPresent() {
+  void validAllFieldsNull() {
+    TestClass testObj = new TestClass();
+    assertTrue(validator.validate(testObj).isEmpty());
+  }
+
+  @Test
+  void validAllRequiredNull() {
     TestClass testObj = new TestClass();
     testObj.field1 = "test";
-    testObj.field2 = "test";
-    testObj.field3 = "test";
     testObj.field4 = "test";
-    testObj.field5 = "test";
-    testObj.field6 = "test";
 
     assertTrue(validator.validate(testObj).isEmpty());
   }
 
   @Test
-  void invalidField3Field2Missing() {
+  void invalidField1PresentField2Present() {
     TestClass testObj = new TestClass();
     testObj.field1 = "test";
-    testObj.field4 = "test";
-    testObj.field5 = "test";
-    testObj.field6 = "test";
+    testObj.field2 = "test";
     Set<ConstraintViolation<TestClass>> validationErrors = validator.validate(testObj);
     assertFalse(validationErrors.isEmpty());
-
-    String expectedMessage =
-        "field1 is present but the following fields are required: field2, field3";
     assertTrue(validationErrors.stream()
-        .map(ConstraintViolation::getMessage)
-        .collect(Collectors.toList())
-        .contains(expectedMessage), "Error message not expected");
+        .anyMatch(v -> v.getMessage()
+            .contains("field1 is present but the following fields are forbidden: field2, field3")));
   }
 
   @Test
-  void invalidField2Missing() {
+  void invalidField4PresentField5Present() {
     TestClass testObj = new TestClass();
-    testObj.field1 = "test";
-    testObj.field3 = "test";
     testObj.field4 = "test";
     testObj.field5 = "test";
-    testObj.field6 = "test";
     Set<ConstraintViolation<TestClass>> validationErrors = validator.validate(testObj);
     assertFalse(validationErrors.isEmpty());
-
-    String expectedMessage =
-        "field1 is present but the following fields are required: field2, field3";
     assertTrue(validationErrors.stream()
-        .map(ConstraintViolation::getMessage)
-        .collect(Collectors.toList())
-        .contains(expectedMessage), "Error message not expected");
+        .anyMatch(v -> v.getMessage()
+            .contains("field4 is present but the following fields are forbidden: field5")));
   }
 
   @Test
-  void invalidField3Missing() {
+  void validField1PresentOthersNull() {
+    TestClass testObj = new TestClass();
+    testObj.field1 = "test";
+    assertTrue(validator.validate(testObj).isEmpty());
+  }
+
+  @Test
+  void validField4PresentOthersNull() {
+    TestClass testObj = new TestClass();
+    testObj.field4 = "test";
+    assertTrue(validator.validate(testObj).isEmpty());
+  }
+
+  @Test
+  void invalidField2Field5NotNull() {
     TestClass testObj = new TestClass();
     testObj.field1 = "test";
     testObj.field2 = "test";
     testObj.field4 = "test";
     testObj.field5 = "test";
-    testObj.field6 = "test";
     Set<ConstraintViolation<TestClass>> validationErrors = validator.validate(testObj);
     assertFalse(validationErrors.isEmpty());
-
-    String expectedMessage =
-        "field1 is present but the following fields are required: field2, field3";
-    assertTrue(validationErrors.stream()
+    List<String> messages = validationErrors.stream()
         .map(ConstraintViolation::getMessage)
-        .collect(Collectors.toList())
+        .collect(Collectors.toList());
+    String expectedMessage = "field4 is present but the following fields are forbidden: field5";
+    assertTrue(messages
+        .contains(expectedMessage), "Error message not expected");
+    expectedMessage = "field1 is present but the following fields are forbidden: field2, field3";
+    assertTrue(messages
         .contains(expectedMessage), "Error message not expected");
   }
 
   @Test
-  void invalidField5Missing() {
+  void invalidAllNotNull() {
     TestClass testObj = new TestClass();
     testObj.field1 = "test";
     testObj.field2 = "test";
     testObj.field3 = "test";
     testObj.field4 = "test";
-    testObj.field6 = "test";
-    Set<ConstraintViolation<TestClass>> validationErrors = validator.validate(testObj);
-    assertFalse(validationErrors.isEmpty());
-
-    String expectedMessage = "field4 is present but the following fields are required: field5";
-    assertTrue(validationErrors.stream()
-        .map(ConstraintViolation::getMessage)
-        .collect(Collectors.toList())
-        .contains(expectedMessage), "Error message not expected");
-  }
-
-  @Test
-  void invalidField2Field5Missing() {
-    TestClass testObj = new TestClass();
-    testObj.field1 = "test";
-    testObj.field3 = "test";
-    testObj.field4 = "test";
-    testObj.field6 = "test";
+    testObj.field5 = "test";
     Set<ConstraintViolation<TestClass>> validationErrors = validator.validate(testObj);
     assertFalse(validationErrors.isEmpty());
     List<String> messages = validationErrors.stream()
         .map(ConstraintViolation::getMessage)
         .collect(Collectors.toList());
-    String expectedMessage = "field4 is present but the following fields are required: field5";
+    String expectedMessage = "field4 is present but the following fields are forbidden: field5";
     assertTrue(messages
         .contains(expectedMessage), "Error message not expected");
-    expectedMessage = "field1 is present but the following fields are required: field2, field3";
-    assertTrue(messages
-        .contains(expectedMessage), "Error message not expected");
-  }
-
-  @Test
-  void invalidAllMissing() {
-    TestClass testObj = new TestClass();
-    testObj.field1 = "test";
-    testObj.field4 = "test";
-    testObj.field6 = "test";
-    Set<ConstraintViolation<TestClass>> validationErrors = validator.validate(testObj);
-    assertFalse(validationErrors.isEmpty());
-    List<String> messages = validationErrors.stream()
-        .map(ConstraintViolation::getMessage)
-        .collect(Collectors.toList());
-    String expectedMessage = "field4 is present but the following fields are required: field5";
-    assertTrue(messages
-        .contains(expectedMessage), "Error message not expected");
-    expectedMessage = "field1 is present but the following fields are required: field2, field3";
+    expectedMessage = "field1 is present but the following fields are forbidden: field2, field3";
     assertTrue(messages
         .contains(expectedMessage), "Error message not expected");
   }
 
   @Test
   void invalidCustomMessage() {
-    TestClassDefaultMessage testObj = new TestClassDefaultMessage();
+    RequiresNullTests.TestClassDefaultMessage
+        testObj = new RequiresNullTests.TestClassDefaultMessage();
     testObj.field4 = "test";
-    Set<ConstraintViolation<TestClassDefaultMessage>> validationErrors =
+    testObj.field5 = "test";
+    Set<ConstraintViolation<RequiresNullTests.TestClassDefaultMessage>> validationErrors =
         validator.validate(testObj);
     assertFalse(validationErrors.isEmpty());
     List<String> messages = validationErrors.stream()
@@ -164,8 +134,8 @@ public class RequiresNotNullTests {
         .contains(expectedMessage), "Error message not expected");
   }
 
-  @RequiresNotNull(field = "field1", requiresFields = { "field2", "field3" })
-  @RequiresNotNull(field = "field4", requiresFields = { "field5" })
+  @RequiresNull(field = "field1", forbiddenFields = { "field2", "field3" })
+  @RequiresNull(field = "field4", forbiddenFields = { "field5" })
   private static class TestClass {
     public String field1;
     public String field2;
@@ -176,7 +146,7 @@ public class RequiresNotNullTests {
 
   }
 
-  @RequiresNotNull(field = "field4", requiresFields = { "field5" }, message = "Message overwritten")
+  @RequiresNull(field = "field4", forbiddenFields = { "field5" }, message = "Message overwritten")
   private static class TestClassDefaultMessage {
     public String field1;
     public String field2;
