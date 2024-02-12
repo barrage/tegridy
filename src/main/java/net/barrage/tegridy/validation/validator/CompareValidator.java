@@ -1,4 +1,4 @@
-package net.barrage.tegridy.validation.validators;
+package net.barrage.tegridy.validation.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

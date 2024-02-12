@@ -1,4 +1,4 @@
-package net.barrage.tegridy.utils;
+package net.barrage.tegridy.util;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

@@ -1,18 +1,18 @@
-package net.barrage.tegridy.validation.validators;
+package net.barrage.tegridy.validation.validator;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.barrage.tegridy.utils.StringUtils;
-import net.barrage.tegridy.validation.annotation.EnumString;
+import net.barrage.tegridy.util.StringUtils;
+import net.barrage.tegridy.validation.annotation.EnumList;
 
-public class EnumStringValidator implements ConstraintValidator<EnumString, CharSequence> {
+public class EnumListValidator implements ConstraintValidator<EnumList, String[]> {
   private List<String> acceptedValues;
 
   @Override
-  public void initialize(EnumString annotation) {
+  public void initialize(EnumList annotation) {
     acceptedValues = Stream.of(annotation.value().getEnumConstants())
         .map(Enum::name)
         .map(String::toLowerCase)
@@ -21,19 +21,25 @@ public class EnumStringValidator implements ConstraintValidator<EnumString, Char
   }
 
   @Override
-  public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
+  public boolean isValid(String[] value, ConstraintValidatorContext context) {
     if (value == null) {
       return true;
     }
 
-    boolean isValid = acceptedValues.stream()
-        .toList()
-        .contains(StringUtils.toLowerCamelCase(value.toString()));
+    var isValid = true;
+
+    for (var val : value) {
+      if (!acceptedValues.contains(StringUtils.toLowerCamelCase(val))) {
+        isValid = false;
+        break;
+      }
+    }
 
     if (!isValid) {
       context.disableDefaultConstraintViolation();
       context.buildConstraintViolationWithTemplate(
-          "must be one of: " + String.join(", ", acceptedValues)).addConstraintViolation();
+              "must be one of the following: " + String.join(", ", acceptedValues))
+          .addConstraintViolation();
     }
 
     return isValid;

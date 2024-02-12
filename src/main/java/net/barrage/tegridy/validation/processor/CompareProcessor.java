@@ -1,4 +1,7 @@
-package net.barrage.tegridy.validation.processors;
+package net.barrage.tegridy.validation.processor;
+
+import static net.barrage.tegridy.util.ProcessorUtils.elementHasField;
+import static net.barrage.tegridy.util.ProcessorUtils.getFieldAsType;
 
 import com.google.auto.service.AutoService;
 import java.util.List;
@@ -22,8 +25,7 @@ import javax.tools.Diagnostic;
 import net.barrage.tegridy.validation.annotation.compare.Compare;
 import net.barrage.tegridy.validation.annotation.compare.CompareList;
 
-@SupportedAnnotationTypes({ "net.barrage.tegridy.validation.annotation.compare.Compare",
-    "net.barrage.tegridy.validation.annotation.compare.CompareList" })
+@SupportedAnnotationTypes("net.barrage.tegridy.validation.annotation.compare.*")
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class CompareProcessor extends AbstractProcessor {
@@ -69,19 +71,6 @@ public class CompareProcessor extends AbstractProcessor {
                 .printMessage(Diagnostic.Kind.ERROR,
                     String.format("Method '%s' required by @Compare not found in class '%s'.",
                         comparisonMethod, annotatedElement.getSimpleName()), annotatedElement));
-  }
-
-  private boolean elementHasField(Element element, String fieldName) {
-    return element.getEnclosedElements().stream().anyMatch(
-        enclosed -> enclosed.getKind() == ElementKind.FIELD &&
-            enclosed.getSimpleName().toString().equals(fieldName));
-  }
-
-  private TypeMirror getFieldAsType(Element element, String fieldName, Elements elementUtils) {
-    return element.getEnclosedElements().stream().filter(
-            enclosed -> enclosed.getKind() == ElementKind.FIELD &&
-                enclosed.getSimpleName().toString().equals(fieldName)).findFirst().map(Element::asType)
-        .orElse(elementUtils.getTypeElement(Object.class.getCanonicalName()).asType());
   }
 
   private void validateMethod(ExecutableElement method, TypeMirror baseFieldType,

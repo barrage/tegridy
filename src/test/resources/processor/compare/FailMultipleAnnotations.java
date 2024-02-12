@@ -1,12 +1,12 @@
-package validation.processors.compare.testClasses;
+package validation.processor.compare.testClasses;
 
 import java.time.LocalDateTime;
 import net.barrage.tegridy.validation.annotation.compare.Compare;
 
 @Compare(baseField = "startDate", comparisonField = "endDate", comparisonMethod = "isAfter")
 @Compare(baseField = "test1", comparisonField = "test2", comparisonMethod = "testMethod")
-@Compare(baseField = "test3", comparisonField = "test2", comparisonMethod = "testMethod")
-public class PassMultipleAnnotations {
+@Compare(baseField = "test3", comparisonField = "test2", comparisonMethod = "isAfter")
+public class FailMultipleAnnotations {
   private LocalDateTime startDate;
   private LocalDateTime endDate;
   private Integer test1;

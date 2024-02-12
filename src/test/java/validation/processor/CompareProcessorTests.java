@@ -1,4 +1,4 @@
-package validation.processors;
+package validation.processor;
 
 import static com.google.testing.compile.Compiler.javac;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
 import javax.tools.JavaFileObject;
-import net.barrage.tegridy.validation.processors.CompareProcessor;
+import net.barrage.tegridy.validation.processor.CompareProcessor;
 import org.junit.jupiter.api.Test;
 
 public class CompareProcessorTests {
@@ -16,7 +16,7 @@ public class CompareProcessorTests {
   @Test
   public void testPass() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processors/compare/CorrectClass.java");
+        JavaFileObjects.forResource("processor/compare/CorrectClass.java");
 
     Compilation compilation = javac()
         .withProcessors(new CompareProcessor())
@@ -28,7 +28,7 @@ public class CompareProcessorTests {
   @Test
   public void testErrorNoBaseField() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processors/compare/MissingBaseField.java");
+        JavaFileObjects.forResource("processor/compare/MissingBaseField.java");
 
     Compilation compilation = javac()
         .withProcessors(new CompareProcessor())
@@ -41,7 +41,7 @@ public class CompareProcessorTests {
   @Test
   public void testErrorNoComparisonField() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processors/compare/MissingComparisonField.java");
+        JavaFileObjects.forResource("processor/compare/MissingComparisonField.java");
 
     Compilation compilation = javac()
         .withProcessors(new CompareProcessor())
@@ -55,7 +55,7 @@ public class CompareProcessorTests {
   @Test
   public void testErrorNoComparisonMethod() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processors/compare/MissingComparisonMethod.java");
+        JavaFileObjects.forResource("processor/compare/MissingComparisonMethod.java");
 
     Compilation compilation = javac()
         .withProcessors(new CompareProcessor())
@@ -69,7 +69,7 @@ public class CompareProcessorTests {
   @Test
   public void testErrorIllegalReturnType() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processors/compare/IllegalReturnType.java");
+        JavaFileObjects.forResource("processor/compare/IllegalReturnType.java");
 
     Compilation compilation = javac()
         .withProcessors(new CompareProcessor())
@@ -83,7 +83,7 @@ public class CompareProcessorTests {
   @Test
   public void testErrorIllegalParametersType() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processors/compare/IllegalParameters.java");
+        JavaFileObjects.forResource("processor/compare/IllegalParameters.java");
 
     Compilation compilation = javac()
         .withProcessors(new CompareProcessor())
@@ -97,7 +97,7 @@ public class CompareProcessorTests {
   @Test
   public void testMultipleAnnotationsPass() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processors/compare/PassMultipleAnnotations.java");
+        JavaFileObjects.forResource("processor/compare/PassMultipleAnnotations.java");
 
     Compilation compilation = javac()
         .withProcessors(new CompareProcessor())
@@ -109,7 +109,7 @@ public class CompareProcessorTests {
   @Test
   public void testMultipleAnnotationsFail() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processors/compare/FailMultipleAnnotations.java");
+        JavaFileObjects.forResource("processor/compare/FailMultipleAnnotations.java");
 
     Compilation compilation = javac()
         .withProcessors(new CompareProcessor())

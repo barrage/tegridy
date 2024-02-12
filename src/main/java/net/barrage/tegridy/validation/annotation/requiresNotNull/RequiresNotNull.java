@@ -10,39 +10,76 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import net.barrage.tegridy.validation.validators.RequiresNotNullValidator;
+import net.barrage.tegridy.validation.validator.RequiresNotNullValidator;
 
 /**
- * Schema violation constraint that
- * validates that fields {@code requiresFieldNames} are not null if
- * field {@code field} is present.
- **/
+ * Defines a validation constraint that enforces certain fields to be non-null if a specific field is present and not null.
+ * This annotation is intended for use on classes to establish conditional validation rules between fields, ensuring that
+ * if a certain condition is met (specific field is not null), then other specified fields must also be not null.
+ *
+ * <p>This annotation is repeatable, allowing multiple conditional non-null validations to be applied to a class.</p>
+ *
+ * Usage example:
+ * <pre>
+ * &#64;RequiresNotNull(field = "conditionalField", requiresFields = {"requiredField1", "requiredField2"},
+ * message = "requiredField1 and requiredField2 must not be null if conditionalField is present")
+ * public class MyClass {
+ *     private String conditionalField;
+ *     private String requiredField1;
+ *     private String requiredField2;
+ *     // Constructor, getters, and setters...
+ * }
+ * </pre>
+ *
+ * Attributes:<br>
+ * - field: Specifies the name of the field that triggers the validation.<br>
+ * - requiresFields: Defines the fields that are required to be not null if the triggering field is present and not null.<br>
+ * - message: Custom message to be used in case of validation failure.<br>
+ * - groups: Specifies the validation groups with which the constraint declaration is associated.<br>
+ * - payload: Used by clients of the Bean Validation API to assign custom payload objects to a constraint.<br>
+ *
+ * @see RequiresNotNullValidator The validator implementing the constraint logic.
+ */
 @Target({ TYPE, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = RequiresNotNullValidator.class)
-@Repeatable(value = RequiresNotNullList.class)
+@Repeatable(RequiresNotNullList.class)
 @Documented
 public @interface RequiresNotNull {
 
   /**
-   * The field which, when present, requires other fields to be present as well.
+   * Specifies the field that, if not null, triggers validation of the specified {@code requiresFields}.
    *
-   * @return The field name.
+   * @return The name of the field triggering validation.
    */
   String field();
 
   /**
-   * The fields which are required to be present when {@code value} is present.
+   * Defines an array of field names that must not be null when the {@code field} is not null.
    *
-   * @return An array of field names.
+   * @return Array of field names to be validated.
    */
   String[] requiresFields();
 
-  String message() default "{RequiresNotNull.message}";
+  /**
+   * Provides a default message to be used for validation failure.
+   *
+   * @return The validation error message template.
+   */
+  String message() default "{NotNullIfAnother.message}";
 
+  /**
+   * Optionally specifies the validation groups with which the constraint declaration is associated.
+   *
+   * @return Validation groups.
+   */
   Class<?>[] groups() default { };
 
+  /**
+   * Can be used by clients of the Bean Validation API to assign custom payload objects to a constraint.
+   *
+   * @return Custom payload classes.
+   */
   Class<? extends Payload>[] payload() default { };
 
 }
-

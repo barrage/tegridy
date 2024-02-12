@@ -9,7 +9,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import net.barrage.tegridy.validation.validators.CompareValidator;
+import net.barrage.tegridy.validation.validator.CompareValidator;
 
 /**
  * The {@code Compare} annotation is used to enforce a comparison constraint between two fields

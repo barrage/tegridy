@@ -13,7 +13,7 @@ import jakarta.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import net.barrage.tegridy.validation.validators.EnumListValidator;
+import net.barrage.tegridy.validation.validator.EnumListValidator;
 
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
