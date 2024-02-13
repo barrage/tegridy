@@ -5,14 +5,17 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.SneakyThrows;
 import net.barrage.tegridy.util.StringUtils;
 import net.barrage.tegridy.validation.annotation.EnumString;
 
 public class EnumStringValidator implements ConstraintValidator<EnumString, CharSequence> {
   private List<String> acceptedValues;
+  private String message;
 
   @Override
   public void initialize(EnumString annotation) {
+    message = annotation.message();
     acceptedValues = Stream.of(annotation.value().getEnumConstants())
         .map(Enum::name)
         .map(String::toLowerCase)
@@ -20,6 +23,7 @@ public class EnumStringValidator implements ConstraintValidator<EnumString, Char
         .collect(Collectors.toList());
   }
 
+  @SneakyThrows
   @Override
   public boolean isValid(CharSequence value, ConstraintValidatorContext context) {
     if (value == null) {
@@ -32,8 +36,13 @@ public class EnumStringValidator implements ConstraintValidator<EnumString, Char
 
     if (!isValid) {
       context.disableDefaultConstraintViolation();
+      String finalMessage = message;
+      if (message.equals(EnumString.class.getMethod("message").getDefaultValue().toString())) {
+        finalMessage = "must be one of: " + String.join(", ", acceptedValues);
+      }
       context.buildConstraintViolationWithTemplate(
-          "must be one of: " + String.join(", ", acceptedValues)).addConstraintViolation();
+              finalMessage)
+          .addConstraintViolation();
     }
 
     return isValid;

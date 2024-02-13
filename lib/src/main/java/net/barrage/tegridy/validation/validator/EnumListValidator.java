@@ -5,14 +5,17 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.SneakyThrows;
 import net.barrage.tegridy.util.StringUtils;
 import net.barrage.tegridy.validation.annotation.EnumList;
 
 public class EnumListValidator implements ConstraintValidator<EnumList, String[]> {
   private List<String> acceptedValues;
+  private String message;
 
   @Override
   public void initialize(EnumList annotation) {
+    message = annotation.message();
     acceptedValues = Stream.of(annotation.value().getEnumConstants())
         .map(Enum::name)
         .map(String::toLowerCase)
@@ -20,6 +23,7 @@ public class EnumListValidator implements ConstraintValidator<EnumList, String[]
         .collect(Collectors.toList());
   }
 
+  @SneakyThrows
   @Override
   public boolean isValid(String[] value, ConstraintValidatorContext context) {
     if (value == null) {
@@ -29,7 +33,7 @@ public class EnumListValidator implements ConstraintValidator<EnumList, String[]
     var isValid = true;
 
     for (var val : value) {
-      if (!acceptedValues.contains(StringUtils.toLowerCamelCase(val))) {
+      if (val == null || !acceptedValues.contains(StringUtils.toLowerCamelCase(val))) {
         isValid = false;
         break;
       }
@@ -37,8 +41,12 @@ public class EnumListValidator implements ConstraintValidator<EnumList, String[]
 
     if (!isValid) {
       context.disableDefaultConstraintViolation();
+      String finalMessage = message;
+      if (message.equals(EnumList.class.getMethod("message").getDefaultValue().toString())) {
+        finalMessage = "must be one of: " + String.join(", ", acceptedValues);
+      }
       context.buildConstraintViolationWithTemplate(
-              "must be one of the following: " + String.join(", ", acceptedValues))
+              finalMessage)
           .addConstraintViolation();
     }
 

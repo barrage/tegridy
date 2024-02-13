@@ -20,9 +20,9 @@ public class StringUtilsTests {
   }
 
   @Test
-  public void testToLowerCamelCase_MultipleWordsWithUpperCase() {
-    String result = StringUtils.toLowerCamelCase("HeLLo_WoRLd_tWo");
-    assertEquals("helloWorldTwo", result);
+  public void testToLowerCamelCaseCamelCase() {
+    String result = StringUtils.toLowerCamelCase("helloWorld");
+    assertEquals("helloWorld", result);
   }
 
   @Test

@@ -15,15 +15,13 @@ public class StringUtils {
   public static String toLowerCamelCase(String input) {
     String[] parts = input.split("_");
 
-    // Do not touch anything with no _
-    if (parts.length <= 1) {
+    if (hasBothCases(input)) {
       return input;
     }
 
     String camelCaseString = Arrays.stream(parts, 1, parts.length)
         .map(part -> part.substring(0, 1).toUpperCase() + part.substring(1).toLowerCase())
         .collect(Collectors.joining());
-
     return parts[0].toLowerCase() + camelCaseString;
   }
 
@@ -44,4 +42,21 @@ public class StringUtils {
     String underscoredString = String.join("_", words).toUpperCase();
     return Enum.valueOf(e, underscoredString);
   }
+
+  private static boolean hasBothCases(String text) {
+    boolean hasUppercase = false;
+    boolean hasLowercase = false;
+    for (char c : text.toCharArray()) {
+      if (Character.isUpperCase(c)) {
+        hasUppercase = true;
+      } else if (Character.isLowerCase(c)) {
+        hasLowercase = true;
+      }
+      if (hasUppercase && hasLowercase) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

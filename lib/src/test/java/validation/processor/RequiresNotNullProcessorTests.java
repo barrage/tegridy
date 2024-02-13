@@ -1,4 +1,4 @@
-package validation.processors;
+package validation.processor;
 
 import static com.google.testing.compile.Compiler.javac;
 import static org.hamcrest.MatcherAssert.assertThat;
