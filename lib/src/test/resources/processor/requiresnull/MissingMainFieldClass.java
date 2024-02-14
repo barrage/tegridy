@@ -1,6 +1,4 @@
-package validation.processors.requiresNull.testClasses;
-
-import net.barrage.tegridy.validation.annotation.requiresNull.RequiresNull;
+import net.barrage.tegridy.validation.annotation.RequiresNull;
 
 @RequiresNull(field = "mainField", forbiddenFields = { "missingRelatedField",
     "missingRelatedField2" })

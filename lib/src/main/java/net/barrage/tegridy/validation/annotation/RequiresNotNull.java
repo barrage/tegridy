@@ -1,4 +1,4 @@
-package net.barrage.tegridy.validation.annotation.requiresNotNull;
+package net.barrage.tegridy.validation.annotation;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.TYPE;

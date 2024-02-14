@@ -12,7 +12,7 @@ import jakarta.validation.ValidatorFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.Set;
-import net.barrage.tegridy.validation.annotation.compare.Compare;
+import net.barrage.tegridy.validation.annotation.Compare;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

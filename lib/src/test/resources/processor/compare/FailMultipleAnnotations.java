@@ -1,7 +1,7 @@
 package validation.processor.compare.testClasses;
 
 import java.time.LocalDateTime;
-import net.barrage.tegridy.validation.annotation.compare.Compare;
+import net.barrage.tegridy.validation.annotation.Compare;
 
 @Compare(baseField = "startDate", comparisonField = "endDate", comparisonMethod = "isAfter")
 @Compare(baseField = "test1", comparisonField = "test2", comparisonMethod = "testMethod")
@@ -16,7 +16,6 @@ public class FailMultipleAnnotations {
   private Boolean isAfter(LocalDateTime startDate, LocalDateTime endDate) {
     return endDate.isAfter(startDate);
   }
-
   private Boolean testMethod(Integer test1, Integer test2) {
     return true;
   }

@@ -15,7 +15,8 @@ public class RequiresNotNullProcessorTests {
 
   @Test
   public void testPass() {
-    JavaFileObject source = JavaFileObjects.forResource("processor/requiresNotNull/CorrectClass.java");
+    JavaFileObject source = JavaFileObjects.forResource(
+        "processor/requiresnotnull/CorrectClass.java");
 
     Compilation compilation = javac()
         .withProcessors(new RequiresNotNullProcessor())
@@ -26,7 +27,8 @@ public class RequiresNotNullProcessorTests {
 
   @Test
   public void testErrorMissingMainField() {
-    JavaFileObject source = JavaFileObjects.forResource("processor/requiresNotNull/MissingMainFieldClass.java");
+    JavaFileObject source = JavaFileObjects.forResource(
+        "processor/requiresnotnull/MissingMainFieldClass.java");
 
     Compilation compilation = javac()
         .withProcessors(new RequiresNotNullProcessor())
@@ -38,7 +40,8 @@ public class RequiresNotNullProcessorTests {
 
   @Test
   public void testErrorMissingRequiredFields() {
-    JavaFileObject source = JavaFileObjects.forResource("processor/requiresNotNull/MissingRequiredFieldsClass.java");
+    JavaFileObject source = JavaFileObjects.forResource(
+        "processor/requiresnotnull/MissingRequiredFieldsClass.java");
 
     Compilation compilation = javac()
         .withProcessors(new RequiresNotNullProcessor())

@@ -10,7 +10,7 @@ import jakarta.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import net.barrage.tegridy.validation.annotation.requiresNull.RequiresNull;
+import net.barrage.tegridy.validation.annotation.RequiresNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

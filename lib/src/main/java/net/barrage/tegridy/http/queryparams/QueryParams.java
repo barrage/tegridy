@@ -1,4 +1,4 @@
-package net.barrage.tegridy.http.queryParams;
+package net.barrage.tegridy.http.queryparams;
 
 import java.util.Collection;
 import org.springframework.util.LinkedMultiValueMap;

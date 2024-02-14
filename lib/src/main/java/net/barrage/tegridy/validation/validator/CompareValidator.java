@@ -5,7 +5,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import lombok.SneakyThrows;
-import net.barrage.tegridy.validation.annotation.compare.Compare;
+import net.barrage.tegridy.validation.annotation.Compare;
 
 public class CompareValidator implements ConstraintValidator<Compare, Object> {
 

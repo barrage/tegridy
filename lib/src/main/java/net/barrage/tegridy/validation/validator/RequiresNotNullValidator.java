@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Field;
 import lombok.SneakyThrows;
-import net.barrage.tegridy.validation.annotation.requiresNotNull.RequiresNotNull;
+import net.barrage.tegridy.validation.annotation.RequiresNotNull;
 
 public class RequiresNotNullValidator implements ConstraintValidator<RequiresNotNull, Object> {
 

@@ -22,10 +22,10 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
-import net.barrage.tegridy.validation.annotation.compare.Compare;
-import net.barrage.tegridy.validation.annotation.compare.CompareList;
+import net.barrage.tegridy.validation.annotation.Compare;
+import net.barrage.tegridy.validation.annotation.CompareList;
 
-@SupportedAnnotationTypes("net.barrage.tegridy.validation.annotation.compare.*")
+@SupportedAnnotationTypes("net.barrage.tegridy.validation.annotation.*")
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class CompareProcessor extends AbstractProcessor {

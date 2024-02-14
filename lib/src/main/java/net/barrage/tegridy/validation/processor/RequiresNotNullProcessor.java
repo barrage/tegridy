@@ -13,11 +13,11 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import net.barrage.tegridy.validation.annotation.requiresNotNull.RequiresNotNull;
-import net.barrage.tegridy.validation.annotation.requiresNotNull.RequiresNotNullList;
+import net.barrage.tegridy.validation.annotation.RequiresNotNull;
+import net.barrage.tegridy.validation.annotation.RequiresNotNullList;
 
 @SupportedAnnotationTypes(
-    "net.barrage.tegridy.validation.annotation.requiresNotNull.*")
+    "net.barrage.tegridy.validation.annotation.*")
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class RequiresNotNullProcessor extends AbstractProcessor {
