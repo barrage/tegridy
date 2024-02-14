@@ -1,6 +1,5 @@
 package config;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import net.barrage.tegridy.modification.annotation.ModifyTrim;
 import net.barrage.tegridy.modification.annotation.ModifyUpperCase;
 
 @Data
-@Valid
 public class TestDto implements Modify {
   @ModifyTrim
   @ModifyUpperCase

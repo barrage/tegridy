@@ -17,7 +17,8 @@ public class ControllerTests {
   @Test
   void works() {
     ResponseEntity<Void> response =
-        restTemplate.getForEntity("/test/regular?foo=agileframeworks&custom=hello", Void.class);
+        restTemplate.getForEntity("/test/regular?foo=\n\n\n\n\n\n\nfoomao\n\n\n\n\n\n&custom=hello",
+            Void.class);
     assertEquals(200, response.getStatusCode().value());
   }
 }
