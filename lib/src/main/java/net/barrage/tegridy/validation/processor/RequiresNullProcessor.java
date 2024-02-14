@@ -16,8 +16,10 @@ import javax.tools.Diagnostic;
 import net.barrage.tegridy.validation.annotation.RequiresNull;
 import net.barrage.tegridy.validation.annotation.RequiresNullList;
 
-@SupportedAnnotationTypes(
-    "net.barrage.tegridy.validation.annotation.*")
+@SupportedAnnotationTypes({
+    "net.barrage.tegridy.validation.annotation.RequiresNull",
+    "net.barrage.tegridy.validation.annotation.RequiresNullList",
+})
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class RequiresNullProcessor extends AbstractProcessor {

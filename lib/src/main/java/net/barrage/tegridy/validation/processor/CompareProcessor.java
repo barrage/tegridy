@@ -25,7 +25,12 @@ import javax.tools.Diagnostic;
 import net.barrage.tegridy.validation.annotation.Compare;
 import net.barrage.tegridy.validation.annotation.CompareList;
 
-@SupportedAnnotationTypes("net.barrage.tegridy.validation.annotation.*")
+@SupportedAnnotationTypes(
+    {
+        "net.barrage.tegridy.validation.annotation.Compare",
+        "net.barrage.tegridy.validation.annotation.CompareList",
+    }
+)
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class CompareProcessor extends AbstractProcessor {

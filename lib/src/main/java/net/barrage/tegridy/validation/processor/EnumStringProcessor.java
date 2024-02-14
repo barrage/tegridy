@@ -14,8 +14,7 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import net.barrage.tegridy.validation.annotation.EnumString;
 
-@SupportedAnnotationTypes(
-    "net.barrage.tegridy.validation.annotation.EnumString")
+@SupportedAnnotationTypes("net.barrage.tegridy.validation.annotation.EnumString")
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class EnumStringProcessor extends AbstractProcessor {

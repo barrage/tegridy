@@ -14,8 +14,7 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import net.barrage.tegridy.validation.annotation.EnumList;
 
-@SupportedAnnotationTypes(
-    "net.barrage.tegridy.validation.annotation.EnumList")
+@SupportedAnnotationTypes("net.barrage.tegridy.validation.annotation.EnumList")
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
 public class EnumListProcessor extends AbstractProcessor {
