@@ -30,6 +30,7 @@ dependencies {
   // Tegridy
   implementation project(':lib')
   annotationProcessor project(':lib')
+  testAnnotationProcessor project(':lib')
 
   // Testing
   testImplementation 'org.junit.jupiter:junit-jupiter'

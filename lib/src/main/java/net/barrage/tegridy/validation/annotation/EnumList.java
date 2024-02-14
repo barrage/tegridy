@@ -37,7 +37,7 @@ import net.barrage.tegridy.validation.validator.EnumListValidator;
  * @see EnumListValidator The validator implementing the constraint logic, checking if provided String values
  * match enum constants in the specified enumeration.
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+@Target({ FIELD })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = EnumListValidator.class)

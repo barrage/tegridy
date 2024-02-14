@@ -40,7 +40,7 @@ import net.barrage.tegridy.validation.validator.EnumStringValidator;
  * @see EnumStringValidator The validator implementing the constraint logic, checking if the provided String or CharSequence
  * matches one of the constant names in the specified enumeration.
  */
-@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
+@Target({ FIELD })
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = EnumStringValidator.class)

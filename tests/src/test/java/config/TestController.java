@@ -16,8 +16,18 @@ public class TestController {
   @Autowired
   Validator validator;
 
-  @GetMapping
+  @GetMapping("/regular")
   public ResponseEntity<Void> get(TestDto dto) {
+    dto.modify();
+    System.out.println("MY DTO: " + dto);
+    var violations = validator.validate(dto, Default.class);
+    System.out.println("MY VIOL: " + violations);
+    return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/recursive")
+  public ResponseEntity<Void> getRecursive(TestDto dto) {
+    dto.modify();
     System.out.println("MY DTO: " + dto);
     var violations = validator.validate(dto, Default.class);
     System.out.println("MY VIOL: " + violations);
