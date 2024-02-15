@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'jacoco'
     id 'maven-publish'
     id 'checkstyle'
     id 'com.diffplug.spotless' version '6.25.0'
@@ -71,6 +72,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 tasks.test {
@@ -110,3 +112,13 @@ publishing {
     }
 }
 
+
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.required.set(true);
+        xml.required.set(true);
+        csv.required.set(true);
+    }
+}

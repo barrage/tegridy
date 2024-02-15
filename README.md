@@ -1,5 +1,7 @@
 # Tegridy
 
+[![coverage report](https://git.barrage.net/jperic1/tegridy/badges/master/coverage.svg)](https://git.barrage.net/jperic1/tegridy/-/commits/master)
+
 Maintain data integrity.
 
 Library for modifying and validating web payloads, with a little bit of utilities sprinkled on top for good

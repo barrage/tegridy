@@ -3,6 +3,21 @@ include:
     ref: master
     file: GitlabFlow/Deploy-custom.yml
 
+Build:
+  stage: build
+  image: nexus.barrage.net:13455/barrage-internal/ubuntu-java-17
+  tags:
+    - docker-executor
+  script:
+    - echo "$NEXUS_CREDS" > gradle.properties
+    - ./gradlew build
+  rules:
+    - if: $CI_COMMIT_REF_PROTECTED != "true"
+      allow_failure: true
+      when: on_success
+    - allow_failure: false
+      when: on_success
+
 Test:
   stage: test
   image: nexus.barrage.net:13455/barrage-internal/ubuntu-java-17
@@ -10,9 +25,9 @@ Test:
     - docker-executor
   script:
     - echo "$NEXUS_CREDS" > gradle.properties
-    - ./gradlew build
     - ./gradlew test
-  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+    - awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; printf "%0.2f%% covered", 100*covered/instructions }' build/reports/jacoco/test/jacocoTestReport.csv
+  coverage: '/([\d\.]+)% covered/'
   rules:
     - if: $CI_COMMIT_REF_PROTECTED != "true"
       allow_failure: true
