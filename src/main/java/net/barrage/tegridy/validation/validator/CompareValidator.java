@@ -29,8 +29,7 @@ public class CompareValidator implements ConstraintValidator<Compare, Object> {
       return true;
     }
 
-    Field field1 = null;
-    field1 = value.getClass().getDeclaredField(baseField);
+    Field field1 = value.getClass().getDeclaredField(baseField);
 
     field1.setAccessible(true);
     Object field1Value = field1.get(value);

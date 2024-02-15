@@ -1,0 +1,22 @@
+./gradlew test
+
+if [ $? -eq 1 ]; then
+  echo "Tests failed"
+  return 1
+fi
+
+./gradlew checkstyleMain
+checkstyle_main_result=$?
+
+./gradlew checkstyleTest
+checkstyle_test_result=$?
+
+./gradlew spotlessJavaCheck
+spotless_check_result=$?
+
+if [ $checkstyle_main_result -eq 1 ] || [ $checkstyle_test_result -eq 1 ] || [ $spotless_check_result -eq 1 ]; then
+  echo "Code style checks failed"
+  echo "Run ./gradlew spotlessJavaApply to auto-fix code style issues"
+  return 1
+fi
+
