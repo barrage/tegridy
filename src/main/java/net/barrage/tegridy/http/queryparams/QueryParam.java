@@ -21,9 +21,7 @@ public @interface QueryParam {
    * A string template with which to format the key with. Useful if the key needs to contain
    * additional symbols.
    *
-   * <h3>Example </h3>
-   *
-   * <br>
+   * <p>Example <br>
    *
    * <p>The following annotation appends '[]' to the key during query string generation. All chars
    * will be URL encoded. <br>
