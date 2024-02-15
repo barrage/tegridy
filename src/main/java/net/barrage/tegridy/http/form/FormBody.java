@@ -1,5 +1,6 @@
 package net.barrage.tegridy.http.form;
 
+import java.util.Collection;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -23,16 +24,39 @@ public interface FormBody {
       }
 
       var formKey = formData.value();
+
       if (formKey.isBlank()) {
         formKey = field.getName();
       }
 
-      field.setAccessible(true);
       try {
-        var fieldValue = field.get(this);
-        if (fieldValue != null) {
-          map.add(formKey, field.get(this));
+        field.setAccessible(true);
+        var value = field.get(this);
+
+        if (value == null) {
+          continue;
         }
+
+        // Check for arrays/collections
+        Class<?> type = field.getType();
+
+        if (Object[].class.isAssignableFrom(type)) {
+          var actual = (Object[]) value;
+          for (var val : actual) {
+            map.add(formKey, val.toString());
+          }
+          continue;
+        }
+
+        if (Collection.class.isAssignableFrom(type)) {
+          var actual = (Collection<?>) value;
+          for (var val : actual) {
+            map.add(formKey, val.toString());
+          }
+          continue;
+        }
+
+        map.add(formKey, value);
       } catch (IllegalAccessException e) {
         throw new RuntimeException(e);
       }

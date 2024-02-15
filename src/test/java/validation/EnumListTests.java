@@ -8,7 +8,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.Set;
-import java.util.stream.Collectors;
 import net.barrage.tegridy.validation.annotation.EnumList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ public class EnumListTests {
 
   @Test
   void allValidEnumValues() {
-    TestClass testObj = new TestClass(new String[] {"TEST", "VALUE_ONE", "VALUE_ONE_TWO_THREE"});
+    TestClass testObj = new TestClass(new String[] {"test", "valueOne", "valueOneTwoThree"});
     assertTrue(validator.validate(testObj).isEmpty());
   }
 
@@ -59,9 +58,9 @@ public class EnumListTests {
   }
 
   @Test
-  void allUpperCaseEnumValues() {
+  void allUpperCaseEnumValuesFail() {
     TestClass testObj = new TestClass(new String[] {"TEST", "VALUE_ONE", "VALUE_ONE_TWO_THREE"});
-    assertTrue(validator.validate(testObj).isEmpty());
+    assertFalse(validator.validate(testObj).isEmpty());
   }
 
   @Test
@@ -74,7 +73,7 @@ public class EnumListTests {
     assertTrue(
         validationErrors.stream()
             .map(ConstraintViolation::getMessage)
-            .collect(Collectors.toList())
+            .toList()
             .contains(expectedMessage),
         "Error message not expected");
   }
@@ -90,7 +89,7 @@ public class EnumListTests {
     assertTrue(
         validationErrors.stream()
             .map(ConstraintViolation::getMessage)
-            .collect(Collectors.toList())
+            .toList()
             .contains(expectedMessage),
         "Error message not expected");
   }

@@ -21,7 +21,7 @@ public class StringUtilsTests {
 
   @Test
   public void testToLowerCamelCaseCamelCase() {
-    String result = StringUtils.toLowerCamelCase("helloWorld");
+    String result = StringUtils.toLowerCamelCase("HELLO_WORLD");
     assertEquals("helloWorld", result);
   }
 

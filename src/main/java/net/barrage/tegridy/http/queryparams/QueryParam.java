@@ -35,6 +35,4 @@ public @interface QueryParam {
    * @return A string template used to format the query key
    */
   String formatKey() default "";
-
-  enum __NoEnum {}
 }

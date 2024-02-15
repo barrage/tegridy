@@ -31,8 +31,7 @@ public class EnumStringValidator implements ConstraintValidator<EnumString, Char
       return true;
     }
 
-    boolean isValid =
-        acceptedValues.stream().toList().contains(StringUtils.toLowerCamelCase(value.toString()));
+    boolean isValid = acceptedValues.stream().toList().contains(value.toString());
 
     if (!isValid) {
       context.disableDefaultConstraintViolation();

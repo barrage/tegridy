@@ -34,7 +34,7 @@ public class EnumListValidator implements ConstraintValidator<EnumList, String[]
     var isValid = true;
 
     for (var val : value) {
-      if (val == null || !acceptedValues.contains(StringUtils.toLowerCamelCase(val))) {
+      if (val == null || !acceptedValues.contains(val)) {
         isValid = false;
         break;
       }

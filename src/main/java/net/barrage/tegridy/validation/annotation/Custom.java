@@ -20,21 +20,24 @@ import net.barrage.tegridy.validation.validator.CustomValidator;
  * <p>This annotation is intended for use at the class level, enabling the validation of class
  * fields based on the specified custom logic encapsulated within the validation method.
  *
- * <p>Attributes: - {@code message}: Provides a default message for validation failures. This can be
- * overridden when the annotation is applied. - {@code groups}: Specifies the validation groups with
- * which the constraint is associated, allowing for selective validation. - {@code payload}: Can be
- * used by clients of the Bean Validation API to assign custom payload objects to the constraint. -
- * {@code baseField}: The name of the field that is the primary target of the validation. - {@code
- * argumentFields}: An optional array of field names that the validation method can use as
- * additional arguments for performing the validation logic. - {@code method}: The name of the
- * method that contains the custom validation logic. This method should be implemented within the
- * class to which the annotation is applied and is expected to return a boolean indicating the
- * validation result.
+ * <p>Attributes:<br>
+ * - {@code message}: Provides a default message for validation failures. This can be overridden
+ * when the annotation is applied. <br>
+ * - {@code groups}: Specifies the validation groups with which the constraint is associated,
+ * allowing for selective validation. <br>
+ * - {@code payload}: Can be used by clients of the Bean Validation API to assign custom payload
+ * objects to the constraint. <br>
+ * - {@code baseField}: The name of the field that is the primary target of the validation. <br>
+ * - {@code argumentFields}: An optional array of field names that the validation method can use as
+ * additional arguments for performing the validation logic. <br>
+ * - {@code method}: The name of the method that contains the custom validation logic. This method
+ * should be implemented within the class to which the annotation is applied and is expected to
+ * return a boolean indicating the validation result.
  *
  * <p>Example usage:
  *
  * <pre>
- * &#64;Custom(
+ * {@code Custom(
  *     baseField = "startDate",
  *     argumentFields = {"endDate"},
  *     method = "validateDateRange",
@@ -50,6 +53,7 @@ import net.barrage.tegridy.validation.validator.CustomValidator;
  *         }
  *         return true;
  *     }
+ * }
  * }
  * </pre>
  *

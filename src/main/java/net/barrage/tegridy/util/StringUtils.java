@@ -2,21 +2,19 @@ package net.barrage.tegridy.util;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import net.barrage.tegridy.validation.annotation.EnumList;
+import net.barrage.tegridy.validation.annotation.EnumString;
 
 public class StringUtils {
   /**
-   * Mostly used in validators that map strings to enums. This will only map snake_case/SCREAM_CASE
-   * strings. Any string passed in that does not contains a '_' will be left as is.
+   * Used only in validators that map strings to enums. This will only map snake_case/SCREAM_CASE
+   * strings. Any string passed in that does not contain a '_' will be lower cased.
    *
    * @param input Input string
    * @return A lower camelCased version of the string.
    */
   public static String toLowerCamelCase(String input) {
     String[] parts = input.split("_");
-
-    if (hasBothCases(input)) {
-      return input;
-    }
 
     String camelCaseString =
         Arrays.stream(parts, 1, parts.length)
@@ -27,7 +25,8 @@ public class StringUtils {
 
   /**
    * Attempts to convert a camel case string to a variant of the given enum. The enum variants must
-   * be in SCREAM_CASE.
+   * be in SCREAM_CASE. Useful in conjunction with the {@link EnumString} and {@link EnumList}
+   * validators so one can be sure they are working with legitimate enum values.
    *
    * @param camelCaseString The string to convert. Must be in camel case.
    * @param e The enum class that holds the desired variant.
@@ -42,21 +41,5 @@ public class StringUtils {
     String[] words = camelCaseString.split("(?=[A-Z])");
     String underscoredString = String.join("_", words).toUpperCase();
     return Enum.valueOf(e, underscoredString);
-  }
-
-  private static boolean hasBothCases(String text) {
-    boolean hasUppercase = false;
-    boolean hasLowercase = false;
-    for (char c : text.toCharArray()) {
-      if (Character.isUpperCase(c)) {
-        hasUppercase = true;
-      } else if (Character.isLowerCase(c)) {
-        hasLowercase = true;
-      }
-      if (hasUppercase && hasLowercase) {
-        return true;
-      }
-    }
-    return false;
   }
 }

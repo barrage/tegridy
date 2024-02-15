@@ -11,24 +11,23 @@ import java.lang.annotation.Target;
 import net.barrage.tegridy.validation.validator.EnumListValidator;
 
 /**
- * The {@code EnumList} annotation is a constraint that validates if the values provided in a String
- * array are valid names of the constants defined in a specified enumeration ({@code value}). This
- * can be used on fields, method parameters, and other elements where an array of Strings
- * representing enumeration values is expected.
+ * Basically the same as {@link EnumString}, but for a list of strings.
  *
  * <p>Usage example on a field that takes an array of Strings representing enum values:
  *
  * <pre>
- * {@code @EnumList(value = MyEnum.class, message = "must be one of {value}"}
+ * {@code @EnumList(value = MyEnum.class})
  * private String[] myEnumValues;
  * </pre>
  *
- * <p>Attributes: - {@code value}: The enumeration class against which the String values will be
- * validated. - {@code message}: The default message that will be displayed when the validation
- * fails. It can incorporate the {@code {value}} placeholder to include the list of valid enum names
- * in the validation message. - {@code groups}: Used to specify validation groups for selective
- * validation. - {@code payload}: Can be used by clients of the Bean Validation API to assign custom
- * payload objects to a constraint.
+ * <p>Attributes: <br>
+ * - {@code value}: The enumeration class against which the String values will be validated. <br>
+ * - {@code message}: The default message that will be displayed when the validation fails. It can
+ * incorporate the {@code {value}} placeholder to include the list of valid enum names in the
+ * validation message. <br>
+ * - {@code groups}: Used to specify validation groups for selective validation. <br>
+ * - {@code payload}: Can be used by clients of the Bean Validation API to assign custom payload
+ * objects to a constraint.
  *
  * @see EnumListValidator The validator implementing the constraint logic, checking if provided
  *     String values match enum constants in the specified enumeration.

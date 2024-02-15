@@ -8,7 +8,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.Set;
-import java.util.stream.Collectors;
 import net.barrage.tegridy.validation.annotation.EnumString;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ public class EnumStringTests {
     assertTrue(validator.validate(testObj).isEmpty());
 
     testObj = new TestClass("TEST");
-    assertTrue(validator.validate(testObj).isEmpty());
+    assertFalse(validator.validate(testObj).isEmpty());
 
     testObj = new TestClass("Test");
     assertFalse(validator.validate(testObj).isEmpty());
@@ -62,12 +61,12 @@ public class EnumStringTests {
   }
 
   @Test
-  void validEnumValuesMultipleWordsSnakeCased() {
+  void invalidEnumValuesMultipleWordsSnakeCased() {
     TestClass testObj = new TestClass("VALUE_ONE_TWO_THREE");
-    assertTrue(validator.validate(testObj).isEmpty());
+    assertFalse(validator.validate(testObj).isEmpty());
 
     testObj = new TestClass("value_one_two_three");
-    assertTrue(validator.validate(testObj).isEmpty());
+    assertFalse(validator.validate(testObj).isEmpty());
 
     testObj = new TestClass("vAlUE_oNE_TWo_three");
     assertFalse(validator.validate(testObj).isEmpty());
@@ -82,7 +81,7 @@ public class EnumStringTests {
     assertTrue(
         validationErrors.stream()
             .map(ConstraintViolation::getMessage)
-            .collect(Collectors.toList())
+            .toList()
             .contains(expectedMessage),
         "Error message not expected");
   }
@@ -102,7 +101,7 @@ public class EnumStringTests {
     assertTrue(
         validationErrors.stream()
             .map(ConstraintViolation::getMessage)
-            .collect(Collectors.toList())
+            .toList()
             .contains(expectedMessage),
         "Error message not expected");
   }
