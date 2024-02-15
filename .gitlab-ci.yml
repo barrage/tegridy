@@ -9,6 +9,7 @@ Test:
   tags:
     - docker-executor
   script:
+    - cat $NEXUS_CREDS > gradle.properties
     - ./gradlew build
     - ./gradlew test
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
