@@ -10,4 +10,4 @@ Tegridy provides:
 - Common modification utilities.
 - Common validation utilities using Jakarta.
 - HTTP utilities for quickly converting objects to form data and query parameters.
-- Minimal \[de]serialization utilities.
+ 
