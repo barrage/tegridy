@@ -13,3 +13,11 @@ Tegridy provides:
 - Common validation utilities using Jakarta.
 - HTTP utilities for quickly converting objects to form data and query parameters.
  
+## Usage
+
+```groovy
+dependencies {
+    implementation 'net.barrage.tegridy:Tegridy:0.1.0@jar'
+    annotationProcessor 'net.barrage.tegridy:Tegridy:0.1.0@jar'
+}
+```

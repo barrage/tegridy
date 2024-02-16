@@ -8,6 +8,8 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.Set;
+import lombok.AllArgsConstructor;
+import net.barrage.tegridy.util.Strum;
 import net.barrage.tegridy.validation.annotation.EnumString;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -106,8 +108,40 @@ public class EnumStringTests {
         "Error message not expected");
   }
 
+  @Test
+  void remapping() {
+    var test =
+        new RemapTest("oneTwoBMS", "one_two_b_m_s", "one-two-b-m-s", "ONE-TWO-B-M-S", "OneTwoBMS");
+    Set<ConstraintViolation<RemapTest>> validationErrors = validator.validate(test);
+
+    assertTrue(validationErrors.isEmpty());
+  }
+
+  @AllArgsConstructor
+  private static class RemapTest {
+
+    @EnumString(value = TestStrum.class, remap = Strum.CamelCase.class)
+    private String camel;
+
+    @EnumString(value = TestStrum.class, remap = Strum.SnakeCase.class)
+    private String snake;
+
+    @EnumString(value = TestStrum.class, remap = Strum.KebabCase.class)
+    private String kebab;
+
+    @EnumString(value = TestStrum.class, remap = Strum.ScreamingKebabCase.class)
+    private String scream;
+
+    @EnumString(value = TestStrum.class, remap = Strum.PascalCase.class)
+    private String pascal;
+
+    private static enum TestStrum {
+      ONE_TWO_B_M_S
+    }
+  }
+
   private static class TestClass {
-    @EnumString(TestEnum.class)
+    @EnumString(value = TestEnum.class, remap = Strum.CamelCase.class)
     private String testField;
 
     public TestClass(String testField) {
@@ -122,7 +156,7 @@ public class EnumStringTests {
   }
 
   private static class TestClassCustomMessage {
-    @EnumString(value = TestClass.TestEnum.class, message = "Custom")
+    @EnumString(value = TestClass.TestEnum.class, remap = Strum.CamelCase.class, message = "Custom")
     private String testField;
 
     public TestClassCustomMessage(String testField) {

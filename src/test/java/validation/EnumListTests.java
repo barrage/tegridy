@@ -8,6 +8,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.Set;
+import net.barrage.tegridy.util.Strum;
 import net.barrage.tegridy.validation.annotation.EnumList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -95,7 +96,7 @@ public class EnumListTests {
   }
 
   private static class TestClass {
-    @EnumList(TestEnum.class)
+    @EnumList(value = TestEnum.class, remap = Strum.CamelCase.class)
     private String[] testField;
 
     public TestClass(String[] testField) {
@@ -110,7 +111,7 @@ public class EnumListTests {
   }
 
   private static class TestClassCustomMessage {
-    @EnumList(value = TestEnum.class, message = "Custom")
+    @EnumList(value = TestEnum.class, remap = Strum.CamelCase.class, message = "Custom")
     private String[] testField;
 
     public TestClassCustomMessage(String[] testField) {

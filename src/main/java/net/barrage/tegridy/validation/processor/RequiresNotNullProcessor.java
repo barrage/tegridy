@@ -1,6 +1,6 @@
 package net.barrage.tegridy.validation.processor;
 
-import static net.barrage.tegridy.util.ProcessorUtils.elementHasField;
+import static net.barrage.tegridy.validation.processor.ProcessorUtils.elementHasField;
 
 import com.google.auto.service.AutoService;
 import java.util.Set;

@@ -8,6 +8,7 @@ import jakarta.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import net.barrage.tegridy.util.Strum;
 import net.barrage.tegridy.validation.validator.EnumStringValidator;
 
 /**
@@ -61,6 +62,14 @@ public @interface EnumString {
    * @return The validation error message template.
    */
   String message() default "must be one of {value}";
+
+  /**
+   * The remap strategy to use for the enum variants. Do note that all variants must be in
+   * SCREAM_CASE.
+   *
+   * @return The re-mapper.
+   */
+  Class<? extends Strum> remap() default Strum.NoMap.class;
 
   /**
    * Specifies the validation groups with which this constraint is associated.

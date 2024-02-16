@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.SneakyThrows;
-import net.barrage.tegridy.util.StringUtils;
 import net.barrage.tegridy.validation.annotation.EnumString;
 
 public class EnumStringValidator implements ConstraintValidator<EnumString, CharSequence> {
@@ -14,13 +13,14 @@ public class EnumStringValidator implements ConstraintValidator<EnumString, Char
   private String message;
 
   @Override
+  @SneakyThrows
   public void initialize(EnumString annotation) {
     message = annotation.message();
+    var mapper = annotation.remap().getConstructor().newInstance();
     acceptedValues =
         Stream.of(annotation.value().getEnumConstants())
             .map(Enum::name)
-            .map(String::toLowerCase)
-            .map(StringUtils::toLowerCamelCase)
+            .map(mapper::remap)
             .collect(Collectors.toList());
   }
 

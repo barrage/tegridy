@@ -1,12 +1,12 @@
-package net.barrage.tegridy.util;
+package net.barrage.tegridy.validation.processor;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
-public class ProcessorUtils {
-  public static boolean elementHasField(Element element, String fieldName) {
+class ProcessorUtils {
+  static boolean elementHasField(Element element, String fieldName) {
     return element.getEnclosedElements().stream()
         .anyMatch(
             enclosed ->
@@ -14,8 +14,7 @@ public class ProcessorUtils {
                     && enclosed.getSimpleName().toString().equals(fieldName));
   }
 
-  public static TypeMirror getFieldAsType(
-      Element element, String fieldName, Elements elementUtils) {
+  static TypeMirror getFieldAsType(Element element, String fieldName, Elements elementUtils) {
     return element.getEnclosedElements().stream()
         .filter(
             enclosed ->
