@@ -17,7 +17,7 @@ Tegridy provides:
 
 ```groovy
 dependencies {
-    implementation 'net.barrage.tegridy:Tegridy:0.1.0@jar'
-    annotationProcessor 'net.barrage.tegridy:Tegridy:0.1.0@jar'
+    implementation 'net.barrage.tegridy:Tegridy:0.1.1@jar'
+    annotationProcessor 'net.barrage.tegridy:Tegridy:0.1.1@jar'
 }
 ```
