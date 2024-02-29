@@ -1,5 +1,7 @@
 .gradle
 gradle.properties
+## TODO remove build.gradle
+build.gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
