@@ -4,19 +4,7 @@ plugins {
     id 'maven-publish'
     id 'checkstyle'
     id 'com.diffplug.spotless' version '6.25.0'
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url = uri("${System.getProperty('user.home')}/.m2/repository")
-        }
-    }
+    id 'java'
 }
 
 checkstyle {
@@ -38,7 +26,7 @@ spotless {
     }
 }
 
-group = 'net.barrage.tegridy'
+group = 'net.barrage'
 version = '0.1.1'
 
 java {
@@ -80,39 +68,50 @@ tasks.test {
     testLogging.exceptionFormat = 'full'
 }
 
-publishing {
-    publications {
-        barrageNexus(MavenPublication) {
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
+
+task createPom {
+    def pomFile = new groovy.xml.MarkupBuilder(new FileWriter("$buildDir/libs/${project.name}-${version}.pom"))
+    pomFile.project {
+        name project.name
+        description 'Maintain data integrity'
+        groupId project.group
+        version project.version
+        artifactId project.name
+        url 'https://github.com/barrage/tegridy'
+        licenses {
+            license {
+                name 'MIT'
+                url 'https://github.com/barrage/tegridy/blob/master/LICENSE.md'
             }
-            pom {
-                name = 'Tegridy'
-                description = 'Maintain data integrity'
-            }
-            groupId = 'net.barrage'
-            artifactId = 'tegridy'
-            version = '0.1.1'
-            from components.java
         }
-    }
-    repositories {
-        maven {
-            credentials {
-                username = nexusUsername
-                password = nexusPassword
+        developers {
+            developer {
+                id 'barrage'
+                name 'Barrage'
+                email 'devops@barrage.net'
+                organization 'barrage.net'
+                organizationUrl 'https://barrage.net'
             }
-            url = nexusUrl
+        }
+        scm {
+            url 'https://github.com/barrage/tegridy'
+            connection 'scm:git:git://github.com/barrage/tegridy.git'
+            developerConnection 'scm:git:git://github.com/barrage/tegridy.git'
+        }
+        issueManagement {
+            url 'https://github.com/barrage/tegridy/issues'
         }
     }
 }
 
-
+tasks.withType(Jar) { task ->
+    task.doLast {
+        ant.checksum file: it.archivePath, algorithm: 'md5'
+        ant.checksum file: it.archivePath, algorithm: 'sha1'
+        ant.checksum file: it.archivePath, algorithm: 'sha-256', fileext: '.sha256'
+        ant.checksum file: it.archivePath, algorithm: 'sha-512', fileext: '.sha512'
+    }
+}
 
 jacocoTestReport {
     dependsOn test
