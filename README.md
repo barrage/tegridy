@@ -1,7 +1,5 @@
 # Tegridy
 
-[![coverage report](https://git.barrage.net/jperic1/tegridy/badges/master/coverage.svg)](https://git.barrage.net/jperic1/tegridy/-/commits/master)
-
 Maintain data integrity.
 
 Library for modifying and validating web payloads, with a little bit of utilities sprinkled on top for good
@@ -17,7 +15,7 @@ Tegridy provides:
 
 ```groovy
 dependencies {
-    implementation 'net.barrage.tegridy:Tegridy:0.1.1@jar'
-    annotationProcessor 'net.barrage.tegridy:Tegridy:0.1.1@jar'
+    implementation 'net.barrage:tegridy:0.1.1@jar'
+    annotationProcessor 'net.barrage:tegridy:0.1.1@jar'
 }
 ```
