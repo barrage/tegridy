@@ -27,7 +27,7 @@ spotless {
 }
 
 group = 'net.barrage'
-version = '0.1.1'
+version = '0.1.2'
 
 java {
     withJavadocJar()
@@ -68,41 +68,64 @@ tasks.test {
     testLogging.exceptionFormat = 'full'
 }
 
-
-task createPom {
-    def pomFile = new groovy.xml.MarkupBuilder(new FileWriter("$buildDir/libs/${project.name}-${version}.pom"))
-    pomFile.project {
-        name project.name
-        description 'Maintain data integrity'
-        groupId project.group
-        version project.version
-        artifactId project.name
-        url 'https://github.com/barrage/tegridy'
-        licenses {
-            license {
-                name 'MIT'
-                url 'https://github.com/barrage/tegridy/blob/master/LICENSE.md'
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom {
+                description = 'Maintain data integrity'
+                url = 'https://github.com/barrage/tegridy'
+                licenses {
+                    license {
+                        name = 'MIT'
+                        url = 'https://github.com/barrage/tegridy/blob/master/LICENSE.md'
+                    }
+                }    
+                developers {
+                    developer {
+                        id = 'barrage'
+                        name = 'Barrage'
+                        email = 'devops@barrage.net'
+                        organization = 'barrage.net'
+                        organizationUrl = 'https://barrage.net'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/barrage/tegridy'
+                    connection = 'scm:git:git://github.com/barrage/tegridy.git'
+                    developerConnection = 'scm:git:git://github.com/barrage/tegridy.git'
+                }
+                issueManagement {
+                    url = 'https://github.com/barrage/tegridy/issues'
+                }
             }
-        }
-        developers {
-            developer {
-                id 'barrage'
-                name 'Barrage'
-                email 'devops@barrage.net'
-                organization 'barrage.net'
-                organizationUrl 'https://barrage.net'
-            }
-        }
-        scm {
-            url 'https://github.com/barrage/tegridy'
-            connection 'scm:git:git://github.com/barrage/tegridy.git'
-            developerConnection 'scm:git:git://github.com/barrage/tegridy.git'
-        }
-        issueManagement {
-            url 'https://github.com/barrage/tegridy/issues'
+            from components.java
         }
     }
 }
+
+tasks.register("generateMavenPom", GenerateMavenPom) {
+    destination = file("$buildDir/libs/${project.name}-${project.version}.pom")
+    pom = publishing.publications.maven.pom
+}
+
+task generatePomChecksums {
+    dependsOn generateMavenPom
+
+    doLast {
+        def pomFile = new File("$buildDir/libs/${project.name}-${project.version}.pom")
+
+        ant.checksum(file: pomFile, algorithm: 'md5', property: 'md5Checksum')
+        ant.checksum(file: pomFile, algorithm: 'sha1', property: 'sha1Checksum')
+
+        File md5File = new File("$buildDir/libs/${project.name}-${project.version}.pom.md5")
+        md5File.text = ant.properties['md5Checksum']
+        
+        File sha1File = new File("$buildDir/libs/${project.name}-${project.version}.pom.sha1")
+        sha1File.text = ant.properties['sha1Checksum']
+    }
+}
+
+tasks.compileJava.dependsOn generatePomChecksums
 
 tasks.withType(Jar) { task ->
     task.doLast {
