@@ -40,8 +40,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework:spring-core:6.1.3'
-    implementation 'org.springframework:spring-web:6.1.3'
+    implementation 'org.springframework:spring-core:6.1.4'
+    implementation 'org.springframework:spring-web:6.1.4'
     implementation 'jakarta.validation:jakarta.validation-api:3.1.0-M1'
     implementation 'org.glassfish.expressly:expressly:5.0.0'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
