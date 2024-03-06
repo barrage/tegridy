@@ -72,6 +72,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             pom {
+                name = 'Tegridy'
                 description = 'Maintain data integrity'
                 url = 'https://github.com/barrage/tegridy'
                 licenses {
@@ -79,7 +80,7 @@ publishing {
                         name = 'MIT'
                         url = 'https://github.com/barrage/tegridy/blob/master/LICENSE.md'
                     }
-                }    
+                }
                 developers {
                     developer {
                         id = 'barrage'
@@ -98,6 +99,9 @@ publishing {
                     url = 'https://github.com/barrage/tegridy/issues'
                 }
             }
+            groupId = 'net.barrage'
+            artifactId = 'tegridy'
+            version = '0.1.1'
             from components.java
         }
     }
@@ -119,7 +123,7 @@ task generatePomChecksums {
 
         File md5File = new File("$buildDir/libs/${project.name}-${project.version}.pom.md5")
         md5File.text = ant.properties['md5Checksum']
-        
+
         File sha1File = new File("$buildDir/libs/${project.name}-${project.version}.pom.sha1")
         sha1File.text = ant.properties['sha1Checksum']
     }
