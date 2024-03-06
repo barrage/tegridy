@@ -14,6 +14,7 @@ public class EnumStringValidator implements ConstraintValidator<EnumString, Char
   private String message;
 
   @Override
+  @SneakyThrows
   public void initialize(EnumString annotation) {
     message = annotation.message();
     Strum mapper;
