@@ -48,6 +48,36 @@ public class ModifyProcessorTests {
                 + "'NestedNoModify.Child'."));
   }
 
+  @Test
+  public void notFieldCustomFailCompilation() {
+    Compilation compilation = compile("processor/modification/NotFieldCustom.java");
+    assertThat(
+        compilation.errors().toString(),
+        containsString(
+            "annotation type not applicable to this kind of declaration"
+        ));
+  }
+
+  @Test
+  public void notFieldStringFailCompilation() {
+    Compilation compilation = compile("processor/modification/NotFieldString.java");
+    assertThat(
+        compilation.errors().toString(),
+        containsString(
+            "annotation type not applicable to this kind of declaration"
+                ));
+  }
+
+  @Test
+  public void notFieldNestedFailCompilation() {
+    Compilation compilation = compile("processor/modification/NotFieldNested.java");
+    assertThat(
+        compilation.errors().toString(),
+        containsString(
+            "annotation type not applicable to this kind of declaration"
+        ));
+  }
+
   Compilation compile(String path) {
 
     JavaFileObject source = JavaFileObjects.forResource(path);
