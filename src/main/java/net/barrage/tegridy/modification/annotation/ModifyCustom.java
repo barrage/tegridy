@@ -9,14 +9,15 @@ import net.barrage.tegridy.modification.Modifier;
 
 /**
  * Valid on any type. Executes custom modification using the provided class. The provided class must
- * implement {@link Modifier} and have an empty constructor.
+ * implement {@link Modifier}, be public/protected, and have an empty constructor.
  */
 @Target({FIELD})
 @Retention(RUNTIME)
 public @interface ModifyCustom {
 
   /**
-   * The class to perform the modification with - must implement {@link Modifier}.
+   * The class to perform the modification with - must implement {@link Modifier}, be
+   * public/protected, and have an empty constructor.
    *
    * @return The class to execute the modification with.
    */

@@ -5,9 +5,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
-/**
- * Provides a single method to convert the implementing class to a query parameter string.
- */
+/** Provides a single method to convert the implementing class to a query parameter string. */
 public interface QueryParams {
 
   /**
@@ -29,7 +27,7 @@ public interface QueryParams {
       try {
         value = field.get(this);
       } catch (IllegalAccessException e) {
-        // We are always setting the field to be accessible so there is no chance of this happening
+        // We are always setting the field to be accessible so this should not cause issues
         throw new RuntimeException(e);
       }
 

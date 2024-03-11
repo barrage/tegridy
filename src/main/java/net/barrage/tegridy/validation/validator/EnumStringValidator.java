@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.SneakyThrows;
 import net.barrage.tegridy.util.Strum;
 import net.barrage.tegridy.validation.annotation.EnumString;
 

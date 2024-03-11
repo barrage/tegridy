@@ -53,9 +53,7 @@ public class ModifyProcessorTests {
     Compilation compilation = compile("processor/modification/NotFieldCustom.java");
     assertThat(
         compilation.errors().toString(),
-        containsString(
-            "annotation type not applicable to this kind of declaration"
-        ));
+        containsString("annotation type not applicable to this kind of declaration"));
   }
 
   @Test
@@ -63,9 +61,7 @@ public class ModifyProcessorTests {
     Compilation compilation = compile("processor/modification/NotFieldString.java");
     assertThat(
         compilation.errors().toString(),
-        containsString(
-            "annotation type not applicable to this kind of declaration"
-                ));
+        containsString("annotation type not applicable to this kind of declaration"));
   }
 
   @Test
@@ -73,9 +69,7 @@ public class ModifyProcessorTests {
     Compilation compilation = compile("processor/modification/NotFieldNested.java");
     assertThat(
         compilation.errors().toString(),
-        containsString(
-            "annotation type not applicable to this kind of declaration"
-        ));
+        containsString("annotation type not applicable to this kind of declaration"));
   }
 
   Compilation compile(String path) {

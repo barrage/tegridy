@@ -1,8 +1,8 @@
 package net.barrage.tegridy.modification;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.SneakyThrows;
 import net.barrage.tegridy.modification.annotation.ModifyCapitalize;
 import net.barrage.tegridy.modification.annotation.ModifyCustom;
 import net.barrage.tegridy.modification.annotation.ModifyLowerCase;
@@ -42,7 +42,6 @@ public interface Modify {
         }
       };
 
-  @SneakyThrows // TODO: Actually handle errors
   default void modify() {
     var clazz = this.getClass();
 
@@ -61,9 +60,18 @@ public interface Modify {
 
             // Make sure the child implements `Modify`
             if (iface.equals(Modify.class)) {
-              var modifier = fieldType.getMethod("modify");
-              var fieldValue = field.get(this);
-              modifier.invoke(fieldValue);
+              try {
+                var modifier = fieldType.getMethod("modify");
+                var fieldValue = field.get(this);
+                modifier.invoke(fieldValue);
+              } catch (NoSuchMethodException | IllegalArgumentException e) {
+                // NoSuchMethod - Cannot happen because of the bound `extends Modify`
+                // IllegalArgument - Argument is checked at compile time
+                throw new RuntimeException(e);
+              } catch (InvocationTargetException | IllegalAccessException e) {
+                // This one should be thrown in case custom modifiers throw
+                throw new RuntimeException(e);
+              }
               break;
             }
           }
@@ -76,12 +84,23 @@ public interface Modify {
         if (annotation.annotationType().equals(ModifyCustom.class)) {
           var custom = (ModifyCustom) annotation;
 
-          Object fieldValue = field.get(this);
+          try {
+            Object fieldValue = field.get(this);
 
-          if (fieldValue != null) {
-            var modInstance = custom.value().getConstructor().newInstance();
-            var modifyMethod = custom.value().getMethod("doModify", field.getType());
-            field.set(this, modifyMethod.invoke(modInstance, fieldValue));
+            if (fieldValue != null) {
+              var modInstance = custom.value().getConstructor().newInstance();
+              var modifyMethod = custom.value().getMethod("doModify", field.getType());
+              field.setAccessible(true);
+              field.set(this, modifyMethod.invoke(modInstance, fieldValue));
+            }
+          } catch (InstantiationException | NoSuchMethodException | IllegalArgumentException e) {
+            // NoSuchMethod - Cannot happen because of the bound `extends Modify`
+            // IllegalArgument - Argument is checked at compile time
+            // Instantiation - All modifiers have an empty constructor
+            throw new RuntimeException(e);
+          } catch (InvocationTargetException | IllegalAccessException e) {
+            // This one should be thrown in case custom modifiers throw or the visibility is wrong
+            throw new RuntimeException(e);
           }
 
           continue;
@@ -93,12 +112,23 @@ public interface Modify {
           continue;
         }
 
-        Object fieldValue = field.get(this);
+        try {
+          Object fieldValue = field.get(this);
 
-        if (fieldValue != null) {
-          var modInstance = modifier.getConstructor().newInstance();
-          var modifyMethod = modifier.getMethod("doModify", field.getType());
-          field.set(this, modifyMethod.invoke(modInstance, fieldValue));
+          if (fieldValue != null) {
+            var modInstance = modifier.getConstructor().newInstance();
+            var modifyMethod = modifier.getMethod("doModify", field.getType());
+            field.setAccessible(true);
+            field.set(this, modifyMethod.invoke(modInstance, fieldValue));
+          }
+        } catch (InstantiationException | NoSuchMethodException | IllegalArgumentException e) {
+          // NoSuchMethod - Cannot happen because of the bound `extends Modify`
+          // IllegalArgument - Argument is checked at compile time
+          // Instantiation - All modifiers have an empty constructor
+          throw new RuntimeException(e);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+          // This one should be thrown in case custom modifiers throw
+          throw new RuntimeException(e);
         }
       }
     }

@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.SneakyThrows;
 import net.barrage.tegridy.util.Strum;
 import net.barrage.tegridy.validation.annotation.EnumList;
 
@@ -15,12 +14,12 @@ public class EnumListValidator implements ConstraintValidator<EnumList, String[]
   private String message;
 
   @Override
-  public void initialize(EnumList annotation)  {
+  public void initialize(EnumList annotation) {
     message = annotation.message();
     Strum mapper;
     try {
       mapper = annotation.remap().getConstructor().newInstance();
-    } catch ( NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
       // NoSuchMethod - each child of Strum has an empty constructor
       // IllegalAccess - each child of Strum has a public constructor
       // InvocationTarget - none of the children of Strum can throw during construction
