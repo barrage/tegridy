@@ -71,7 +71,7 @@ public @interface RequiresNotNull {
    *
    * @return The validation error message template.
    */
-  String message() default "{NotNullIfAnother.message}";
+  String message() default "";
 
   /**
    * Optionally specifies the validation groups with which the constraint declaration is associated.

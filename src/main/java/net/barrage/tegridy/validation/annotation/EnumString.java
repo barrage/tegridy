@@ -61,7 +61,7 @@ public @interface EnumString {
    *
    * @return The validation error message template.
    */
-  String message() default "must be one of {value}";
+  String message() default "";
 
   /**
    * The remap strategy to use for the enum variants. Do note that all variants must be in

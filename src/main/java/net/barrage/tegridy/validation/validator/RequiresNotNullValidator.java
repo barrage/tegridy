@@ -43,7 +43,7 @@ public class RequiresNotNullValidator implements ConstraintValidator<RequiresNot
 
       context.disableDefaultConstraintViolation();
       String finalMessage = message;
-      if (message.equals(RequiresNotNull.class.getMethod("message").getDefaultValue().toString())) {
+      if (finalMessage.isBlank()) {
         finalMessage =
             fieldName
                 + " is present but the following fields are required: "

@@ -44,7 +44,7 @@ public class RequiresNullValidator implements ConstraintValidator<RequiresNull, 
 
       context.disableDefaultConstraintViolation();
       String finalMessage = message;
-      if (message.equals(RequiresNull.class.getMethod("message").getDefaultValue().toString())) {
+      if (finalMessage.isBlank()) {
         finalMessage =
             fieldName
                 + " is present but the following fields are forbidden: "

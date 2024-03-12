@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import net.barrage.tegridy.validation.annotation.RequireAny;
 
 /**
- * Validator that requires at least one of the classes' fields to be non-null. Useful for DTOs whose params
- * can vary.
+ * Validator that requires at least one of the classes' fields to be non-null. Useful for DTOs whose
+ * params can vary.
  */
 public class RequireAnyValidator implements ConstraintValidator<RequireAny, Object> {
   private String message;
