@@ -1,8 +1,10 @@
 package modification;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import net.barrage.tegridy.modification.Modifier;
 import net.barrage.tegridy.modification.Modify;
 import net.barrage.tegridy.modification.annotation.ModifyCapitalize;
@@ -37,10 +39,22 @@ public class ModifyTests {
   }
 
   @Test
+  void customModifierThrows() {
+    var test = new CustomModifierThrowTest("baFOOnaFOOna");
+    assertThrows(RuntimeException.class, test::modify);
+  }
+
+  @Test
   void nestedModifierWorks() {
     var test = new NestedModifierTest(new NestedModifierTest.Child("    trim    "));
     test.modify();
     assertEquals("trim", test.child.foo);
+  }
+
+  @Test
+  void nestedModifierThrows() {
+    var test = new NestedModifierThrowTest(new NestedModifierThrowTest.Child("    trim    "));
+    assertThrows(RuntimeException.class, test::modify);
   }
 
   @AllArgsConstructor
@@ -54,9 +68,10 @@ public class ModifyTests {
   @AllArgsConstructor
   static class CustomModifierTest implements Modify {
     @ModifyCustom(RemoveFoo.class)
-    public String foo;
+    String foo;
 
-    public static class RemoveFoo implements Modifier<String> {
+    protected static class RemoveFoo implements Modifier<String> {
+      public RemoveFoo() {}
 
       @Override
       public String doModify(String input) {
@@ -66,12 +81,46 @@ public class ModifyTests {
   }
 
   @AllArgsConstructor
+  static class CustomModifierThrowTest implements Modify {
+    @ModifyCustom(ThrowFoo.class)
+    String foo;
+
+    @NoArgsConstructor
+    static class ThrowFoo implements Modifier<String> {
+
+      @Override
+      public String doModify(String input) {
+        throw new RuntimeException("DONE GOOFD");
+      }
+    }
+  }
+
+  @AllArgsConstructor
   static class NestedModifierTest implements Modify {
     @ModifyNested Child child;
 
     @AllArgsConstructor
-    public static class Child implements Modify {
+    static class Child implements Modify {
       @ModifyTrim String foo;
+    }
+  }
+
+  @AllArgsConstructor
+  static class NestedModifierThrowTest implements Modify {
+    @ModifyNested Child child;
+
+    @AllArgsConstructor
+    static class Child implements Modify {
+      @ModifyCustom(ChildModifier.class)
+      String foo;
+    }
+
+    @NoArgsConstructor
+    static class ChildModifier implements Modifier<Child> {
+      @Override
+      public Child doModify(Child input) {
+        throw new RuntimeException("DONE GOOFD");
+      }
     }
   }
 }

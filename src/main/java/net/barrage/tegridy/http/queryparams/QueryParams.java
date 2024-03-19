@@ -20,48 +20,50 @@ public interface QueryParams {
     MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 
     for (var field : fields) {
+      var queryParamData = field.getAnnotation(QueryParam.class);
+
+      field.setAccessible(true);
+      Object value;
       try {
-        var queryParamData = field.getAnnotation(QueryParam.class);
-
-        field.setAccessible(true);
-        Object value = field.get(this);
-
-        if (queryParamData == null || value == null) {
-          continue;
-        }
-
-        // Construct query key
-
-        var queryKey = queryParamData.value().isBlank() ? field.getName() : queryParamData.value();
-
-        if (!queryParamData.formatKey().isBlank()) {
-          queryKey = String.format(queryParamData.formatKey(), queryKey);
-        }
-
-        Class<?> type = field.getType();
-
-        // Check for arrays/collections
-
-        if (Object[].class.isAssignableFrom(type)) {
-          var actual = (Object[]) value;
-          for (var val : actual) {
-            map.add(queryKey, val.toString());
-          }
-          continue;
-        }
-
-        if (Collection.class.isAssignableFrom(type)) {
-          var actual = (Collection<?>) value;
-          for (var val : actual) {
-            map.add(queryKey, val.toString());
-          }
-          continue;
-        }
-
-        map.add(queryKey, value.toString());
+        value = field.get(this);
       } catch (IllegalAccessException e) {
+        // We are always setting the field to be accessible so this should not cause issues
         throw new RuntimeException(e);
       }
+
+      if (queryParamData == null || value == null) {
+        continue;
+      }
+
+      // Construct query key
+
+      var queryKey = queryParamData.value().isBlank() ? field.getName() : queryParamData.value();
+
+      if (!queryParamData.formatKey().isBlank()) {
+        queryKey = String.format(queryParamData.formatKey(), queryKey);
+      }
+
+      Class<?> type = field.getType();
+
+      // Check for arrays/collections
+
+      if (Object[].class.isAssignableFrom(type)) {
+        var actual = (Object[]) value;
+        for (var val : actual) {
+          map.add(queryKey, val.toString());
+        }
+        continue;
+      }
+
+      if (Collection.class.isAssignableFrom(type)) {
+        var actual = (Collection<?>) value;
+        for (var val : actual) {
+          map.add(queryKey, val.toString());
+        }
+        continue;
+      }
+
+      map.add(queryKey, value.toString());
     }
 
     var query = UriComponentsBuilder.newInstance().queryParams(map).build().encode().getQuery();

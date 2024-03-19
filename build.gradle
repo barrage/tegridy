@@ -40,8 +40,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework:spring-core:6.1.3'
-    implementation 'org.springframework:spring-web:6.1.3'
+    implementation 'org.springframework:spring-core:6.1.4'
+    implementation 'org.springframework:spring-web:6.1.4'
     implementation 'jakarta.validation:jakarta.validation-api:3.1.0-M1'
     implementation 'org.glassfish.expressly:expressly:5.0.0'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
@@ -72,6 +72,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             pom {
+                name = 'Tegridy'
                 description = 'Maintain data integrity'
                 url = 'https://github.com/barrage/tegridy'
                 licenses {
@@ -79,7 +80,7 @@ publishing {
                         name = 'MIT'
                         url = 'https://github.com/barrage/tegridy/blob/master/LICENSE.md'
                     }
-                }    
+                }
                 developers {
                     developer {
                         id = 'barrage'
@@ -98,6 +99,9 @@ publishing {
                     url = 'https://github.com/barrage/tegridy/issues'
                 }
             }
+            groupId = 'net.barrage'
+            artifactId = 'tegridy'
+            version = '0.1.1'
             from components.java
         }
     }
@@ -119,7 +123,7 @@ task generatePomChecksums {
 
         File md5File = new File("$buildDir/libs/${project.name}-${project.version}.pom.md5")
         md5File.text = ant.properties['md5Checksum']
-        
+
         File sha1File = new File("$buildDir/libs/${project.name}-${project.version}.pom.sha1")
         sha1File.text = ant.properties['sha1Checksum']
     }

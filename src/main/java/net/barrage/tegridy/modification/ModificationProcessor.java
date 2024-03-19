@@ -10,7 +10,6 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
@@ -41,13 +40,6 @@ public class ModificationProcessor extends AbstractProcessor {
                 ModifyCapitalize.class));
 
     for (var element : elements) {
-      if (element.getKind() != ElementKind.FIELD) {
-        processingEnv
-            .getMessager()
-            .printMessage(
-                Diagnostic.Kind.ERROR, "String modifiers can only be applied to fields", element);
-      }
-
       VariableElement field = (VariableElement) element;
       var strType = processingEnv.getElementUtils().getTypeElement("java.lang.String").asType();
       var typesMatch = processingEnv.getTypeUtils().isSameType(field.asType(), strType);
@@ -68,13 +60,6 @@ public class ModificationProcessor extends AbstractProcessor {
     var customElements = roundEnv.getElementsAnnotatedWithAny(Set.of(ModifyCustom.class));
 
     for (var element : customElements) {
-      if (element.getKind() != ElementKind.FIELD) {
-        processingEnv
-            .getMessager()
-            .printMessage(
-                Diagnostic.Kind.ERROR, "Custom modifiers can only be applied to fields", element);
-      }
-
       VariableElement field = (VariableElement) element;
 
       // The following is a hack to get the type in the annotation.
@@ -119,13 +104,6 @@ public class ModificationProcessor extends AbstractProcessor {
     var nestedElements = roundEnv.getElementsAnnotatedWithAny(Set.of(ModifyNested.class));
 
     for (var element : nestedElements) {
-      if (element.getKind() != ElementKind.FIELD) {
-        processingEnv
-            .getMessager()
-            .printMessage(
-                Diagnostic.Kind.ERROR, "Nested modifiers can only be applied to fields", element);
-      }
-
       VariableElement field = (VariableElement) element;
 
       TypeElement type = processingEnv.getElementUtils().getTypeElement(field.asType().toString());
