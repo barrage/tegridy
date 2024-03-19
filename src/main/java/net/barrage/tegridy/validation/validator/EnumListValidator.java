@@ -53,14 +53,8 @@ public class EnumListValidator implements ConstraintValidator<EnumList, String[]
     if (!isValid) {
       context.disableDefaultConstraintViolation();
       String finalMessage = message;
-      try {
-        if (message.equals(EnumList.class.getMethod("message").getDefaultValue().toString())) {
-          finalMessage = "must be one of: " + String.join(", ", acceptedValues);
-        }
-      } catch (NoSuchMethodException e) {
-        // No chance of this happening since we know EnumList has a `message` method.
-        // Solely here to avoid sneaky throws
-        return false;
+      if (finalMessage.isBlank()) {
+        finalMessage = "must be one of: " + String.join(", ", acceptedValues);
       }
       context.buildConstraintViolationWithTemplate(finalMessage).addConstraintViolation();
     }
