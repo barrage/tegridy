@@ -3,6 +3,7 @@ package net.barrage.tegridy.validation.validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.constraints.NotNull;
+import java.lang.reflect.Modifier;
 import net.barrage.tegridy.validation.annotation.RequireAny;
 
 /**
@@ -20,6 +21,11 @@ public class RequireAnyValidator implements ConstraintValidator<RequireAny, Obje
   @Override
   public boolean isValid(@NotNull Object o, ConstraintValidatorContext context) {
     for (var field : o.getClass().getDeclaredFields()) {
+      // Skip static fields
+      if (Modifier.isStatic(field.getModifiers())) {
+        continue;
+      }
+
       field.setAccessible(true);
       try {
         var value = field.get(o);
