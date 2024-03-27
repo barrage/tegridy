@@ -45,6 +45,30 @@ public class RequireAnyTests {
     assertEquals(expectedMessage, violations.iterator().next().getMessage());
   }
 
+  @Test
+  void correctlyFailsWithStaticFields() {
+    var foo = new FooStatic();
+    var violations = validator.validate(foo);
+    String expectedMessage = "Object must have at least one non-null field";
+    assertEquals(expectedMessage, violations.iterator().next().getMessage());
+  }
+
+  @Test
+  void correctlyPassesWithStaticFields() {
+    var foo = new FooStatic("foo", null);
+    var violations = validator.validate(foo);
+    assertTrue(violations.isEmpty());
+  }
+
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @RequireAny
+  static class FooStatic {
+    String foo;
+    String bar;
+    static String BAR = "bar";
+  }
+
   @AllArgsConstructor
   @NoArgsConstructor
   @RequireAny
