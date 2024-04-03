@@ -1,25 +1,24 @@
 package net.barrage.tegridy.validation.annotation;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import net.barrage.tegridy.validation.validator.RequireAnyValidator;
+import net.barrage.tegridy.validation.validator.Ip4Validator;
 
-/** Validates that at least one of the classes' fields is non-null. */
-@Target({TYPE})
-@Retention(RUNTIME)
-@Constraint(validatedBy = RequireAnyValidator.class)
-public @interface RequireAny {
+/** Annotation used to validate whether a string is a valid IPv4 address. */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+@Constraint(validatedBy = Ip4Validator.class)
+public @interface Ip4 {
   /**
    * The message to display when a validation error occurs.
    *
    * @return The validation error message.
    */
-  String message() default "Object must have at least one non-null field";
+  String message() default "Invalid IPv4 address";
 
   /**
    * Can be used by clients of the Bean Validation API to assign custom payload objects to a

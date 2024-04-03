@@ -38,8 +38,7 @@ public class RequireAnyValidator implements ConstraintValidator<RequireAny, Obje
     }
 
     context.disableDefaultConstraintViolation();
-    String finalMessage = message;
-    context.buildConstraintViolationWithTemplate(finalMessage).addConstraintViolation();
+    context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
     context.disableDefaultConstraintViolation();
 
     return false;
