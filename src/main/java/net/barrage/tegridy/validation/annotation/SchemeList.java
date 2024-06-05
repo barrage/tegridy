@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({TYPE, ANNOTATION_TYPE})
 @Documented
-public @interface CustomList {
-  Custom[] value();
+public @interface SchemeList {
+  Scheme[] value();
 }

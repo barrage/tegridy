@@ -9,10 +9,10 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import net.barrage.tegridy.validation.validator.CustomValidator;
+import net.barrage.tegridy.validation.validator.SchemeValidator;
 
 /**
- * The {@code Custom} annotation is designed to define a generic validation constraint that can be
+ * The {@code Scheme} annotation is designed to define a generic validation constraint that can be
  * customized through the specification of a base field, a set of argument fields, and a validation
  * method. This flexibility allows for the implementation of complex validation logic that can be
  * reused across different types.
@@ -37,7 +37,7 @@ import net.barrage.tegridy.validation.validator.CustomValidator;
  * <p>Example usage:
  *
  * <pre>
- * {@code Custom(
+ * {@code Scheme(
  *     baseField = "startDate",
  *     argumentFields = {"endDate"},
  *     method = "validateDateRange",
@@ -57,22 +57,22 @@ import net.barrage.tegridy.validation.validator.CustomValidator;
  * }
  * </pre>
  *
- * @see CustomValidator The validator implementing the constraint logic based on the defined custom
+ * @see SchemeValidator The validator implementing the constraint logic based on the defined custom
  *     method.
  */
 @Target({TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = CustomValidator.class)
-@Repeatable(value = CustomList.class)
+@Constraint(validatedBy = SchemeValidator.class)
+@Repeatable(value = SchemeList.class)
 @Documented
-public @interface Custom {
+public @interface Scheme {
 
   /**
    * Default message to be used in case of validation failure.
    *
    * @return The validation error message template.
    */
-  String message() default "Custom validation failed";
+  String message() default "Scheme validation failed";
 
   /**
    * Specifies the validation groups with which this constraint is associated.

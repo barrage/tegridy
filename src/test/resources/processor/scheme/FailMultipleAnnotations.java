@@ -1,13 +1,13 @@
-package validation.processor.compare.testClasses;
+package validation.processor.scheme.testClasses;
 
 import java.time.LocalDateTime;
-import net.barrage.tegridy.validation.annotation.Custom;
+import net.barrage.tegridy.validation.annotation.Scheme;
 
-@Custom(baseField = "startDate", argumentFields = { "endDate" }, method = "isAfter")
-@Custom(baseField = "test1", argumentFields = { "test2", "test3" }, method = "testMethod")
-@Custom(baseField = "endDate", method = "oneArgument")
-@Custom(baseField = "test2", argumentFields = { "test1", "test3" }, method = "testMethod")
-public class PassMultipleAnnotations {
+@Scheme(baseField = "startDate", argumentFields = { "endDate" }, method = "isAfter")
+@Scheme(baseField = "test1", argumentFields = { "test2", "test3" }, method = "testMethod")
+@Scheme(baseField = "endDate", method = "oneArgument")
+@Scheme(baseField = "test2", argumentFields = { "test1" }, method = "isAfter")
+public class FailMultipleAnnotations {
   private LocalDateTime startDate;
   private LocalDateTime endDate;
   private Integer test1;

@@ -1,6 +1,8 @@
-import net.barrage.tegridy.validation.annotation.Custom;
+package validation.processor.scheme.testClasses;
 
-@Custom(baseField = "base", argumentFields = { "argument1",
+import net.barrage.tegridy.validation.annotation.Scheme;
+
+@Scheme(baseField = "base", argumentFields = { "argument1",
     "argument2" }, method = "valid")
 public class MissingBaseField {
   Integer argument1;

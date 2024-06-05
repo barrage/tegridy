@@ -7,9 +7,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.SneakyThrows;
-import net.barrage.tegridy.validation.annotation.Custom;
+import net.barrage.tegridy.validation.annotation.Scheme;
 
-public class CustomValidator implements ConstraintValidator<Custom, Object> {
+public class SchemeValidator implements ConstraintValidator<Scheme, Object> {
 
   private String baseField;
   private String[] argumentFields;
@@ -17,7 +17,7 @@ public class CustomValidator implements ConstraintValidator<Custom, Object> {
   private String message;
 
   @Override
-  public void initialize(Custom constraintAnnotation) {
+  public void initialize(Scheme constraintAnnotation) {
     this.baseField = constraintAnnotation.baseField();
     this.argumentFields = constraintAnnotation.argumentFields();
     this.message = constraintAnnotation.message();

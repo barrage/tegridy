@@ -24,35 +24,35 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
-import net.barrage.tegridy.validation.annotation.Custom;
-import net.barrage.tegridy.validation.annotation.CustomList;
+import net.barrage.tegridy.validation.annotation.Scheme;
+import net.barrage.tegridy.validation.annotation.SchemeList;
 
 @SupportedAnnotationTypes({
-  "net.barrage.tegridy.validation.annotation.Custom",
-  "net.barrage.tegridy.validation.annotation.CustomList"
+  "net.barrage.tegridy.validation.annotation.Scheme",
+  "net.barrage.tegridy.validation.annotation.SchemeList"
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @AutoService(Processor.class)
-public class CustomProcessor extends AbstractProcessor {
+public class SchemeProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     roundEnv
-        .getElementsAnnotatedWithAny(Set.of(Custom.class, CustomList.class))
+        .getElementsAnnotatedWithAny(Set.of(Scheme.class, SchemeList.class))
         .forEach(
             annotatedElement -> {
-              Custom[] customs = annotatedElement.getAnnotationsByType(Custom.class);
-              for (Custom custom : customs) {
-                validateFieldsAndMethod(annotatedElement, custom);
+              Scheme[] schemes = annotatedElement.getAnnotationsByType(Scheme.class);
+              for (Scheme scheme : schemes) {
+                validateFieldsAndMethod(annotatedElement, scheme);
               }
             });
     return true;
   }
 
-  private void validateFieldsAndMethod(Element annotatedElement, Custom custom) {
-    String baseField = custom.baseField();
-    String[] argumentFields = custom.argumentFields();
-    String validationMethod = custom.method();
+  private void validateFieldsAndMethod(Element annotatedElement, Scheme scheme) {
+    String baseField = scheme.baseField();
+    String[] argumentFields = scheme.argumentFields();
+    String validationMethod = scheme.method();
 
     Types typeUtils = processingEnv.getTypeUtils();
     Elements elementUtils = processingEnv.getElementUtils();
@@ -64,7 +64,7 @@ public class CustomProcessor extends AbstractProcessor {
               Diagnostic.Kind.ERROR,
               String.format(
                   "The class '%s' is missing 'baseField' required by @%s: '%s'.",
-                  annotatedElement.getSimpleName(), Custom.class.getSimpleName(), baseField),
+                  annotatedElement.getSimpleName(), Scheme.class.getSimpleName(), baseField),
               annotatedElement);
       return;
     }
@@ -82,7 +82,7 @@ public class CustomProcessor extends AbstractProcessor {
                 String.format(
                     "The class '%s' is missing one of argument fields required by @%s: '%s'.",
                     annotatedElement.getSimpleName(),
-                    Custom.class.getSimpleName(),
+                    Scheme.class.getSimpleName(),
                     argumentFields[i]),
                 annotatedElement);
         return;
@@ -116,7 +116,7 @@ public class CustomProcessor extends AbstractProcessor {
               Diagnostic.Kind.ERROR,
               String.format(
                   "Method '%s' required by @%s not found in class '%s'.",
-                  validationMethod, Custom.class.getSimpleName(), annotatedElement.getSimpleName()),
+                  validationMethod, Scheme.class.getSimpleName(), annotatedElement.getSimpleName()),
               annotatedElement);
     }
   }
@@ -142,7 +142,7 @@ public class CustomProcessor extends AbstractProcessor {
               Diagnostic.Kind.ERROR,
               String.format(
                   "Method '%s' in class '%s' must return boolean as required by @%s.",
-                  validationMethod, annotatedElement.getSimpleName(), Custom.class.getSimpleName()),
+                  validationMethod, annotatedElement.getSimpleName(), Scheme.class.getSimpleName()),
               annotatedElement);
       return;
     }
@@ -180,7 +180,7 @@ public class CustomProcessor extends AbstractProcessor {
                   annotatedElement.getSimpleName(),
                   argumentTypes.length,
                   typesString,
-                  Custom.class.getSimpleName()),
+                  Scheme.class.getSimpleName()),
               annotatedElement);
     }
   }
