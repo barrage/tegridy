@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 // They handle cases with one or more argument fields. Remember to tweak or add more tests
 // depending on what you need for your specific validation rules.
 
-public class SchemeValidatorTests {
+public class SchemeTests {
 
   private static Validator validator;
 

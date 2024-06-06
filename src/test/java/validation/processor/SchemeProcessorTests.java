@@ -11,7 +11,7 @@ import javax.tools.JavaFileObject;
 import net.barrage.tegridy.validation.processor.SchemeProcessor;
 import org.junit.jupiter.api.Test;
 
-public class SchemeTests {
+public class SchemeProcessorTests {
 
   @Test
   public void testPass() {
