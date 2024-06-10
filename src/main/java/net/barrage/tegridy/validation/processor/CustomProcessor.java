@@ -1,13 +1,7 @@
 package net.barrage.tegridy.validation.processor;
 
-import static net.barrage.tegridy.validation.processor.ProcessorUtils.elementHasField;
-import static net.barrage.tegridy.validation.processor.ProcessorUtils.getFieldAsType;
-
 import com.google.auto.service.AutoService;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -15,15 +9,13 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.tools.Diagnostic;
 import net.barrage.tegridy.validation.annotation.Custom;
 import net.barrage.tegridy.validation.annotation.CustomList;
 
@@ -43,145 +35,87 @@ public class CustomProcessor extends AbstractProcessor {
             annotatedElement -> {
               Custom[] customs = annotatedElement.getAnnotationsByType(Custom.class);
               for (Custom custom : customs) {
-                validateFieldsAndMethod(annotatedElement, custom);
+                validateMethod(annotatedElement, custom);
               }
             });
     return true;
   }
 
-  private void validateFieldsAndMethod(Element annotatedElement, Custom custom) {
-    String baseField = custom.baseField();
-    String[] argumentFields = custom.argumentFields();
+  private void validateMethod(Element annotatedElement, Custom custom) {
+    TypeMirror validatorTypeMirror = getValidatorClassTypeMirror(custom);
     String validationMethod = custom.method();
 
-    Types typeUtils = processingEnv.getTypeUtils();
     Elements elementUtils = processingEnv.getElementUtils();
+    Types typeUtils = processingEnv.getTypeUtils();
+    assert validatorTypeMirror != null;
+    TypeElement validatorTypeElement = elementUtils.getTypeElement(validatorTypeMirror.toString());
 
-    if (!elementHasField(annotatedElement, baseField)) {
-      processingEnv
-          .getMessager()
-          .printMessage(
-              Diagnostic.Kind.ERROR,
-              String.format(
-                  "The class '%s' is missing 'baseField' required by @%s: '%s'.",
-                  annotatedElement.getSimpleName(), Custom.class.getSimpleName(), baseField),
-              annotatedElement);
-      return;
-    }
-    TypeMirror[] argumentFieldsType = new TypeMirror[argumentFields.length + 1];
-    TypeMirror baseFieldType = getFieldAsType(annotatedElement, baseField, elementUtils);
-    argumentFieldsType[0] = baseFieldType;
+    boolean methodFound = false;
 
-    for (int i = 0; i < argumentFields.length; i++) {
+    for (Element enclosedElement : validatorTypeElement.getEnclosedElements()) {
+      if (enclosedElement instanceof ExecutableElement executableElement) {
+        if (executableElement.getSimpleName().toString().equals(validationMethod)) {
+          methodFound = true;
 
-      if (!elementHasField(annotatedElement, argumentFields[i])) {
-        processingEnv
-            .getMessager()
-            .printMessage(
-                Diagnostic.Kind.ERROR,
-                String.format(
-                    "The class '%s' is missing one of argument fields required by @%s: '%s'.",
-                    annotatedElement.getSimpleName(),
-                    Custom.class.getSimpleName(),
-                    argumentFields[i]),
-                annotatedElement);
-        return;
-      }
-      argumentFieldsType[i + 1] = getFieldAsType(annotatedElement, argumentFields[i], elementUtils);
-    }
+          if (!typeUtils.isSameType(
+              executableElement.getReturnType(), typeUtils.getPrimitiveType(TypeKind.BOOLEAN))) {
+            error(
+                annotatedElement,
+                "Method %s in class %s must return boolean required by @%s",
+                validationMethod,
+                validatorTypeElement.getQualifiedName(),
+                Custom.class.getCanonicalName());
+            return;
+          }
 
-    var enclosedStream = annotatedElement.getEnclosedElements().stream();
+          if (executableElement.getParameters().size() != 1) {
+            error(
+                annotatedElement,
+                "Method %s in class %s must have exactly one parameter required by @%s",
+                validationMethod,
+                validatorTypeElement.getQualifiedName(),
+                Custom.class.getCanonicalName());
+            return;
+          }
 
-    var element =
-        enclosedStream
-            .filter(
-                enclosed ->
-                    enclosed.getKind() == ElementKind.METHOD
-                        && enclosed.getSimpleName().toString().equals(validationMethod))
-            .map(ExecutableElement.class::cast)
-            .findFirst();
+          TypeMirror parameterType = executableElement.getParameters().get(0).asType();
+          if (!typeUtils.isAssignable(annotatedElement.asType(), parameterType)) {
+            error(
+                annotatedElement,
+                "Method %s in class %s must accept a parameter of type %s to match @%s field",
+                validationMethod,
+                validatorTypeElement.getQualifiedName(),
+                annotatedElement.asType().toString(),
+                Custom.class.getCanonicalName());
+          }
 
-    if (element.isPresent()) {
-      validateMethod(
-          element.get(),
-          argumentFieldsType,
-          typeUtils,
-          elementUtils,
-          annotatedElement,
-          validationMethod);
-    } else {
-      processingEnv
-          .getMessager()
-          .printMessage(
-              Diagnostic.Kind.ERROR,
-              String.format(
-                  "Method '%s' required by @%s not found in class '%s'.",
-                  validationMethod, Custom.class.getSimpleName(), annotatedElement.getSimpleName()),
-              annotatedElement);
-    }
-  }
-
-  private void validateMethod(
-      ExecutableElement method,
-      TypeMirror[] argumentTypes,
-      Types typeUtils,
-      Elements elementUtils,
-      Element annotatedElement,
-      String validationMethod) {
-
-    TypeMirror returnType = method.getReturnType();
-    boolean isBooleanType =
-        returnType.getKind() == TypeKind.BOOLEAN
-            || typeUtils.isSameType(
-                returnType, elementUtils.getTypeElement(Boolean.class.getCanonicalName()).asType());
-
-    if (!isBooleanType) {
-      processingEnv
-          .getMessager()
-          .printMessage(
-              Diagnostic.Kind.ERROR,
-              String.format(
-                  "Method '%s' in class '%s' must return boolean as required by @%s.",
-                  validationMethod, annotatedElement.getSimpleName(), Custom.class.getSimpleName()),
-              annotatedElement);
-      return;
-    }
-
-    List<? extends VariableElement> parameters = method.getParameters();
-    boolean isSignatureValid = true;
-
-    if (parameters.size() != argumentTypes.length) {
-      isSignatureValid = false;
-    } else {
-      for (int i = 0; i < argumentTypes.length; i++) {
-        if (!typeUtils.isSameType(parameters.get(i).asType(), argumentTypes[i])) {
-          isSignatureValid = false;
           break;
         }
       }
     }
 
-    if (!isSignatureValid) {
-      String typesString =
-          Arrays.stream(argumentTypes)
-              .map(
-                  argumentType -> {
-                    String[] typeSplit = argumentType.toString().split(" ");
-                    return String.format("'%s'", typeSplit[typeSplit.length - 1]);
-                  })
-              .collect(Collectors.joining(", "));
-      processingEnv
-          .getMessager()
-          .printMessage(
-              Diagnostic.Kind.ERROR,
-              String.format(
-                  "Method '%s' in class '%s' must have exactly %s parameters matching types of %s as required by @%s.",
-                  validationMethod,
-                  annotatedElement.getSimpleName(),
-                  argumentTypes.length,
-                  typesString,
-                  Custom.class.getSimpleName()),
-              annotatedElement);
+    if (!methodFound) {
+      error(
+          annotatedElement,
+          "Method %s not found in class %s required by @%s",
+          validationMethod,
+          validatorTypeElement.getQualifiedName(),
+          Custom.class.getCanonicalName());
     }
+  }
+
+  private TypeMirror getValidatorClassTypeMirror(Custom custom) {
+    try {
+      custom._validatorClass();
+    } catch (MirroredTypeException mte) {
+      return mte.getTypeMirror();
+    }
+    return null;
+  }
+
+  private void error(Element e, String msg, Object... args) {
+    processingEnv
+        .getMessager()
+        .printMessage(javax.tools.Diagnostic.Kind.ERROR, String.format(msg, args), e);
   }
 }

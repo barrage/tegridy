@@ -1,6 +1,6 @@
 package net.barrage.tegridy.validation.annotation;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import jakarta.validation.Constraint;
@@ -13,12 +13,9 @@ import net.barrage.tegridy.validation.validator.CustomValidator;
 
 /**
  * The {@code Custom} annotation is designed to define a generic validation constraint that can be
- * customized through the specification of a base field, a set of argument fields, and a validation
- * method. This flexibility allows for the implementation of complex validation logic that can be
- * reused across different types.
+ * customized through the validation method on the field.
  *
- * <p>This annotation is intended for use at the class level, enabling the validation of class
- * fields based on the specified custom logic encapsulated within the validation method.
+ * <p>This annotation is intended for use at the field level.
  *
  * <p>Attributes:<br>
  * - {@code message}: Provides a default message for validation failures. This can be overridden
@@ -27,46 +24,52 @@ import net.barrage.tegridy.validation.validator.CustomValidator;
  * allowing for selective validation. <br>
  * - {@code payload}: Can be used by clients of the Bean Validation API to assign custom payload
  * objects to the constraint. <br>
- * - {@code baseField}: The name of the field that is the primary target of the validation. <br>
- * - {@code argumentFields}: An optional array of field names that the validation method can use as
- * additional arguments for performing the validation logic. <br>
+ * - {@code _validatorClass}: Class that will contain method for validation. <br>
  * - {@code method}: The name of the method that contains the custom validation logic. This method
- * should be implemented within the class to which the annotation is applied and is expected to
- * return a boolean indicating the validation result.
+ * should be implemented within the {@code _validatorClass} and is expected to return a boolean
+ * indicating the validation result.
  *
  * <p>Example usage:
  *
  * <pre>
- * {@code Custom(
- *     baseField = "startDate",
- *     argumentFields = {"endDate"},
- *     method = "validateDateRange",
- *     message = "Start date must be before end date"
- * )
- * public class DateRange {
- *     private LocalDate startDate;
- *     private LocalDate endDate;
+ * {@code public static class TestClass {
+ *     @Custom(_validatorClass = TestClass.class, method = "higherThan5", message = "field1 must be greater than 5")
+ *     @Custom(_validatorClass = TestClass.class, method = "higherThan4", message = "field1 must be greater than 4")
+ *     public Integer field1;
+ *     @Custom(_validatorClass = TestClass.class, method = "containsS", message = "field2 must contain 's'")
+ *     public String field2;
+ *     public String field3;
  *
- *     public boolean validateDateRange() {
- *         if (startDate != null && endDate != null) {
- *             return startDate.isBefore(endDate);
- *         }
- *         return true;
+ *     public TestClass(Integer field1, String field2, String field3) {
+ *       this.field1 = field1;
+ *       this.field2 = field2;
+ *       this.field3 = field3;
  *     }
- * }
+ *
+ *     private static boolean higherThan5(Integer val) {
+ *       return val > 5;
+ *     }
+ *
+ *     private static boolean higherThan4(Integer val) {
+ *       return val > 4;
+ *     }
+ *
+ *     private static boolean containsS(String val) {
+ *       return val.contains("s");
+ *     }
+ *   }
  * }
  * </pre>
  *
  * @see CustomValidator The validator implementing the constraint logic based on the defined custom
- *     method.
+ *     method in validator class.
  */
-@Target({TYPE})
+@Target({FIELD})
 @Retention(RUNTIME)
+@Documented
 @Constraint(validatedBy = CustomValidator.class)
 @Repeatable(value = CustomList.class)
-@Documented
 public @interface Custom {
-
   /**
    * Default message to be used in case of validation failure.
    *
@@ -89,19 +92,8 @@ public @interface Custom {
    */
   Class<? extends Payload>[] payload() default {};
 
-  /**
-   * The name of the base field involved in the validation.
-   *
-   * @return The base field name.
-   */
-  String baseField();
-
-  /**
-   * Optional array of field names that serve as arguments to the custom validation method.
-   *
-   * @return The argument fields.
-   */
-  String[] argumentFields() default {};
+  /** Custom class that contains method for validation. */
+  Class<?> _validatorClass();
 
   /**
    * The name of the method that encapsulates the custom validation logic.

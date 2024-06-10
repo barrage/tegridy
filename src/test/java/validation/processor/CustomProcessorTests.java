@@ -23,89 +23,52 @@ public class CustomProcessorTests {
   }
 
   @Test
-  public void testErrorNoBaseField() {
-    JavaFileObject source = JavaFileObjects.forResource("processor/custom/MissingBaseField.java");
+  public void testErrorNoMethod() {
+    JavaFileObject source = JavaFileObjects.forResource("processor/custom/MissingMethod.java");
 
     Compilation compilation = javac().withProcessors(new CustomProcessor()).compile(source);
 
     assertThat(
         compilation.errors().toString(),
         containsString(
-            "The class 'MissingBaseField' is missing 'baseField' required by @Custom: 'base'"));
+            "Method validate not found in class validation.processor.custom.testClasses.MissingMethod required by @net.barrage.tegridy.validation.annotation.Custom"));
   }
 
   @Test
-  public void testErrorNoArgumentField() {
+  public void testErrorMethodNotBoolean() {
+    JavaFileObject source = JavaFileObjects.forResource("processor/custom/MethodNotBoolean.java");
+
+    Compilation compilation = javac().withProcessors(new CustomProcessor()).compile(source);
+
+    assertThat(
+        compilation.errors().toString(),
+        containsString(
+            "Method validate2 in class validation.processor.custom.testClasses.MethodNotBoolean must return boolean required by @net.barrage.tegridy.validation.annotation.Custom"));
+  }
+
+  @Test
+  public void testErrorMethodMultipleParams() {
     JavaFileObject source =
-        JavaFileObjects.forResource("processor/custom/MissingArgumentField.java");
+        JavaFileObjects.forResource("processor/custom/MethodMultipleParams.java");
 
     Compilation compilation = javac().withProcessors(new CustomProcessor()).compile(source);
 
     assertThat(
         compilation.errors().toString(),
         containsString(
-            "The class 'MissingArgumentField' is missing one of argument fields required by @Custom: 'argument2'."));
+            "Method validate in class validation.processor.custom.testClasses.MethodMultipleParams must have exactly one parameter required by @net.barrage.tegridy.validation.annotation.Custom"));
   }
 
   @Test
-  public void testErrorNoValidationMethod() {
-    JavaFileObject source =
-        JavaFileObjects.forResource("processor/custom/MissingValidationMethod.java");
+  public void testErrorMethodWrongParam() {
+    JavaFileObject source = JavaFileObjects.forResource("processor/custom/MethodWrongParam.java");
 
     Compilation compilation = javac().withProcessors(new CustomProcessor()).compile(source);
 
     assertThat(
         compilation.errors().toString(),
         containsString(
-            "Method 'valid' required by @Custom not found in class 'MissingValidationMethod'."));
-  }
-
-  @Test
-  public void testErrorIllegalReturnType() {
-    JavaFileObject source = JavaFileObjects.forResource("processor/custom/IllegalReturnType.java");
-
-    Compilation compilation = javac().withProcessors(new CustomProcessor()).compile(source);
-
-    assertThat(
-        compilation.errors().toString(),
-        containsString(
-            "Method 'valid' in class 'IllegalReturnType' must return boolean as required by @Custom."));
-  }
-
-  @Test
-  public void testErrorIllegalParametersType() {
-    JavaFileObject source =
-        JavaFileObjects.forResource("processor/custom/IllegalParameterTypes.java");
-
-    Compilation compilation = javac().withProcessors(new CustomProcessor()).compile(source);
-
-    assertThat(
-        compilation.errors().toString(),
-        containsString(
-            "Method 'valid' in class 'IllegalParameterTypes' must have exactly 3 parameters matching types of 'java.lang.Integer', 'java.lang.Integer', 'java.lang.String' as required by @Custom."));
-  }
-
-  @Test
-  public void testErrorIllegalParameterNumber() {
-    JavaFileObject source =
-        JavaFileObjects.forResource("processor/custom/IllegalParameterNumber.java");
-
-    Compilation compilation = javac().withProcessors(new CustomProcessor()).compile(source);
-
-    assertThat(
-        compilation.errors().toString(),
-        containsString(
-            "Method 'valid' in class 'IllegalParameterNumber' must have exactly 3 parameters matching types of 'java.lang.Integer', 'java.lang.Integer', 'java.lang.String' as required by @Custom."));
-  }
-
-  @Test
-  public void testMultipleAnnotationsPass() {
-    JavaFileObject source =
-        JavaFileObjects.forResource("processor/custom/PassMultipleAnnotations.java");
-
-    Compilation compilation = javac().withProcessors(new CustomProcessor()).compile(source);
-
-    assertTrue(compilation.errors().isEmpty());
+            "Method validate in class validation.processor.custom.testClasses.MethodWrongParam must accept a parameter of type java.lang.Integer to match @net.barrage.tegridy.validation.annotation.Custom field"));
   }
 
   @Test
@@ -118,6 +81,10 @@ public class CustomProcessorTests {
     assertThat(
         compilation.errors().toString(),
         containsString(
-            "Method 'isAfter' in class 'FailMultipleAnnotations' must have exactly 2 parameters matching types of 'java.lang.Integer', 'java.lang.Integer' as required by @Custom."));
+            "Method validate in class validation.processor.custom.testClasses.FailMultipleAnnotations must return boolean required by @net.barrage.tegridy.validation.annotation.Custom"));
+    assertThat(
+        compilation.errors().toString(),
+        containsString(
+            "Method validate1 not found in class validation.processor.custom.testClasses.FailMultipleAnnotations required by @net.barrage.tegridy.validation.annotation.Custom"));
   }
 }

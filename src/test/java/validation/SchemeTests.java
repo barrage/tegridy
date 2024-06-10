@@ -9,15 +9,15 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.Set;
-import net.barrage.tegridy.validation.annotation.Custom;
+import net.barrage.tegridy.validation.annotation.Scheme;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-// Test cases here check how our CustomValidation works in different situations.
+// Test cases here check how our SchemeValidation works in different situations.
 // They handle cases with one or more argument fields. Remember to tweak or add more tests
 // depending on what you need for your specific validation rules.
 
-public class CustomValidatorTests {
+public class SchemeTests {
 
   private static Validator validator;
 
@@ -54,7 +54,7 @@ public class CustomValidatorTests {
   void testValidationFailMultipleFirst() {
     TestClassMultiple obj = new TestClassMultiple(1, 5, "Test", "true");
     Set<ConstraintViolation<TestClassMultiple>> violations = validator.validate(obj);
-    assertTrue(violations.size() == 1, "Only first should fail");
+    assertEquals(1, violations.size(), "Only first should fail");
     String expectedMessage = "Base field must be greater than field1";
     assertEquals(expectedMessage, violations.iterator().next().getMessage());
   }
@@ -63,7 +63,7 @@ public class CustomValidatorTests {
   void testValidationFailMultipleSecond() {
     TestClassMultiple obj = new TestClassMultiple(5, 1, "Test", "FALSE");
     Set<ConstraintViolation<TestClassMultiple>> violations = validator.validate(obj);
-    assertTrue(violations.size() == 1, "Only second should fail");
+    assertEquals(1, violations.size(), "Only second should fail");
     String expectedMessage = "field3 should say true";
     assertEquals(expectedMessage, violations.iterator().next().getMessage());
   }
@@ -72,7 +72,7 @@ public class CustomValidatorTests {
   void testValidationFailMultipleAll() {
     TestClassMultiple obj = new TestClassMultiple(5, 6, "Test", "FALSE");
     Set<ConstraintViolation<TestClassMultiple>> violations = validator.validate(obj);
-    assertTrue(violations.size() == 2, "All should fail");
+    assertEquals(2, violations.size(), "All should fail");
     String expectedMessage = "Base field must be greater than field1";
     assertTrue(
         violations.stream()
@@ -87,7 +87,7 @@ public class CustomValidatorTests {
             .contains(expectedMessage));
   }
 
-  @Custom(
+  @Scheme(
       baseField = "baseField",
       argumentFields = {"field1", "field2"},
       method = "validate",
@@ -108,12 +108,12 @@ public class CustomValidatorTests {
     }
   }
 
-  @Custom(
+  @Scheme(
       baseField = "baseField",
       argumentFields = {"field1", "field2"},
       method = "validate1",
       message = "Base field must be greater than field1")
-  @Custom(
+  @Scheme(
       baseField = "field1",
       argumentFields = {"field3", "baseField"},
       method = "validate2",
