@@ -76,6 +76,7 @@ public class IpTests {
   @NoArgsConstructor
   @Data
   static class FooMessage {
-    @Ip4(message = "Jel ti treba to u zivotu?") String ip;
+    @Ip4(message = "Jel ti treba to u zivotu?")
+    String ip;
   }
 }
